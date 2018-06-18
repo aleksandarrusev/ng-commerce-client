@@ -1,0 +1,12 @@
+<form #loginForm ngForm="loginForm" (submit)="login(loginForm.value)">
+  <div class="form-group">
+    <input type="text" ngModel name="email" class="form-control">
+  </div>
+  <div class="form-group">
+    <input type="password" ngModel name="password" class="form-control">
+  </div>
+
+  <div class="form-group">
+    <div class="button btn btn-primary">Login</div>
+  </div>
+</form>
