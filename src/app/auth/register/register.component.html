@@ -1,0 +1,23 @@
+<h2>Register</h2>
+<form method="post" #loginForm="ngForm" (ngSubmit)="register(loginForm.value)" class="flex-row justify-content-center align-items-center">
+
+  <div class="form-group">
+    <label for="name">Name
+      <input type="text" ngModel id="name" name="name" class="form-control">
+    </label>
+  </div>
+  <div class="form-group">
+    <label for="email">Email
+      <input type="text" ngModel id="email" name="email" class="form-control">
+    </label>
+  </div>
+  <div class="form-group">
+    <label for="password">Password
+      <input type="password" ngModel id="password" name="password" class="form-control">
+    </label>
+  </div>
+
+  <div class="form-group">
+    <button class="button btn btn-primary">Register</button>
+  </div>
+</form>

@@ -1,0 +1,4 @@
+<h1>{{ category | titlecase}}</h1>
+<div class="d-flex justify-content-start mt-3">
+<app-product-card *ngFor="let product of products" class="ml-3 mr-3" [product]="product"></app-product-card>
+</div>

@@ -1,4 +1,3 @@
-<div class="alert alert-success" *ngIf="success">Product created successfully</div>
 <form #form="ngForm" (submit)="createProduct(form.value)">
   <div class="form-group">
     <label for="name">Product name</label>
@@ -11,15 +10,27 @@
   <div class="form-group">
     <label for="category">Category</label>
     <select class="form-control" id="category" ngModel name="category" required>
-      <option>Electronics</option>
-      <option>Home</option>
-      <option>Clothing</option>
+      <option *ngFor="let category of categories$ | async" [value]="category._id">{{ category.name | titlecase}}</option>
     </select>
   </div>
   <div class="form-group">
-    <label for="image">Product image url</label>
-    <input type="text" class="form-control" id="image" ngModel name="imageUrl" placeholder="Product image url...">
+    <label for="image">Price</label>
+    <input type="text" class="form-control" id="price" ngModel name="price" placeholder="Product price...">
   </div>
+  <div class="form-group">
+    <label for="image">Numbers in stock</label>
+    <input type="text" class="form-control" id="stock" ngModel name="stock" placeholder="Product stock...">
+  </div>
+
+  <div class="form-group">
+    <label for="image">Product image url</label>
+    <input type="text" class="form-control" id="image" ngModel name="imageURL" placeholder="Product image url...">
+  </div>
+  <div class="form-group">
+    <label for="description">Description</label>
+    <textarea class="form-control" id="description" ngModel name="description" placeholder="Product description..."></textarea>
+  </div>
+
   <div class="form-group">
     <button class="btn btn-primary" type="submit" [disabled]="form.invalid">Create product</button>
   </div>

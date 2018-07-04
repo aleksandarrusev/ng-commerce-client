@@ -1,4 +1,5 @@
-<form #loginForm ngForm="loginForm" (submit)="login(loginForm.value)">
+<h2>Login</h2>
+<form method="post" #loginForm="ngForm" (ngSubmit)="login(loginForm.value)">
   <div class="form-group">
     <input type="text" ngModel name="email" class="form-control">
   </div>
@@ -7,6 +8,6 @@
   </div>
 
   <div class="form-group">
-    <div class="button btn btn-primary">Login</div>
+    <button class="button btn btn-primary">Login</button>
   </div>
 </form>

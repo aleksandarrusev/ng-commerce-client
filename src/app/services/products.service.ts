@@ -1,31 +1,55 @@
-import {Product} from '../shop/product/product.model';
+import {IProduct, Product} from '../shopping/product/product.model';
+import {Injectable} from '@angular/core';
+import {Observable} from 'rxjs';
 
+import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {ICategory} from '../shopping/category.model';
+@Injectable()
 export class ProductsService {
-  products: Product[] = [
-    {
-      category: 'Clothes',
-      name: 'T-shirt',
-      image: 'https://scene7.zumiez.com/is/image/zumiez/pdp_hero/adidas-Trefoil-White-T-Shirt-_289236-back-US.jpg'
-    },
-    {
-      category: 'Electronics',
-      name: 'Samsung Galaxy',
-      image: 'https://media.tracfone.com/wps/contenthandler/dav/content/libraries/wcm.library.phones/components/STSAS120VL/wcm.comps.image/st_ecom_large_1.png'
-    },
-    {
-      category: 'Home',
-      name: 'Multicooker',
-      image: 'https://cdn.technomarket.bg/media/cache/my_thumb/uploads/library/product/09146944/596f50c2a2047.jpg'
-    }
-  ];
 
-  addProduct(product: Product) {
-    this.products.push(product);
+  categories: ICategory[];
+
+  constructor(private http: HttpClient) {
   }
 
-  getAllProducts(): Product[] {
-    return this.products;
+  fetchAllProducts() {
+    return this.http.get<IProduct[]>('http://localhost:3000/api/products');
   }
 
+  fetchProductsByCategoryName(categoryName: string) {
+    return this.http.get<IProduct[]>('http://localhost:3000/api/categories/' + categoryName);
+  }
+
+  fetchProductById(productId: string) {
+    return this.http.get<IProduct>('http://localhost:3000/api/products/' + productId);
+  }
+
+
+  createProduct(product) {
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type':  'application/json',
+      })
+    };
+
+
+    return this.http.post<Product>('http://localhost:3000/api/products/', product, httpOptions);
+  }
+
+
+  fetchAllCategories() {
+    return this.http.get<ICategory[]>('http://localhost:3000/api/categories');
+  }
+
+  setCategories(categories: ICategory[]) {
+    this.categories = categories;
+  }
+
+  getCategories() {
+    return this.categories;
+  }
+  isCategoryValid(categoryName) {
+
+  }
 
 }

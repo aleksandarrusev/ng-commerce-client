@@ -1,45 +1,87 @@
-import { Injectable } from '@angular/core';
-import {Observable} from 'rxjs';
-import { AngularFireAuth} from 'angularfire2/auth';
-import * as firebase from 'firebase/app';
+import {Injectable} from '@angular/core';
+import {BehaviorSubject, Observable, Subject} from 'rxjs';
 import {Router} from '@angular/router';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
-  private user$: Observable<firebase.User>;
-  private userDetails: firebase.User;
+  public userDetails;
+  public authStatusChanged: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(this.isTokenAvailable());
 
-  constructor (private firebaseAuth: AngularFireAuth, private router: Router) {
-    this.user$ = firebaseAuth.authState;
-
-    this.user$.subscribe((user) => {
-      if (user) {
-        this.userDetails = user;
-      } else {
-        this.userDetails = null;
-      }
-    });
+  constructor(private router: Router, private http: HttpClient) {
   }
 
   isLoggedIn() {
-    if (this.userDetails == null ) {
+    if (!this.isTokenAvailable()) {
       return false;
-    } else {
-      return true;
     }
+    return true;
   }
+
+  register(name: String, email: String, password: String): void {
+    const user = {
+      name,
+      email,
+      password,
+    };
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+      })
+    };
+
+    this.http.post('http://localhost:3000/api/users', user, httpOptions).subscribe(
+      (response: Response) => {
+        this.userDetails = response['user'];
+        this.setToken(response['token']);
+
+        this.authStatusChanged.next(true);
+        this.router.navigate(['/']);
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
+  }
+
+  login(email: String, password: String): void {
+    const user = {email, password};
+
+
+    this.http.post('http://localhost:3000/api/auth', user).subscribe(
+      (response: Response) => {
+        this.userDetails = response['user'];
+        this.setToken(response['token']);
+
+        this.authStatusChanged.next(true);
+        this.router.navigate(['/']);
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
+  }
+
   logout() {
-    this.firebaseAuth.auth.signOut()
-      .then((res) => this.router.navigate(['/']));
+    localStorage.removeItem('jwt_token');
+    this.router.navigate(['/login']);
+    this.authStatusChanged.next(false);
+  }
+
+  private setToken(token) {
+    localStorage.setItem('jwt_token', token);
+  }
+
+  private getToken() {
+    return localStorage.getItem('jwt_token');
   }
 
 
-  signInRegular(email, password) {
-    const credential = firebase.auth.EmailAuthProvider.credential( email, password );
-    return this.firebaseAuth.auth.signInWithEmailAndPassword(email, password)
+  private isTokenAvailable() {
+    return !!localStorage.getItem('jwt_token');
   }
 
 

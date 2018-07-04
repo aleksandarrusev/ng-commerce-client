@@ -13,8 +13,7 @@ export class LoginComponent implements OnInit {
   ngOnInit() {
   }
 
-  login() {
-    this.authService.
+  login(value) {
+    this.authService.login(value.email, value.password);
   }
-
 }
