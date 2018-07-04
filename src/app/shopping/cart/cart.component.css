@@ -6,3 +6,13 @@
   max-height:100%;
   object-fit: contain
 }
+.qty-control {
+  width: 50px;
+  text-align: center;
+}
+.fa-trash {
+  cursor:pointer;
+}
+.fa-trash:hover {
+  color:#000;
+}

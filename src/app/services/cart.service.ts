@@ -6,7 +6,7 @@ import {IProduct, Product} from '../shopping/product/product.model';
 @Injectable()
 export class CartService {
   private cart: CartItem[] = [];
-  cartChanged: BehaviorSubject<number> = new BehaviorSubject<number>(0);
+  cartChanged: BehaviorSubject<any> = new BehaviorSubject<any>(0);
 
   add(product: IProduct) {
     const existingCartItem = this.cart.find((cartItem) => {
@@ -26,14 +26,35 @@ export class CartService {
     return this.cart;
   }
 
-  getCartItemsCount() {
+  getCartItemsCount(): { count: number, total: number } {
+    const cartStatus = {
+      count: 0,
+      total: 0,
+    };
     if (this.cart.length > 0) {
-      const count =  this.cart.reduce(function (accumulator, currentValue) {
-        return accumulator + currentValue.qty;
-      }, 0);
-      return count;
+      const count = this.cart.forEach(function (cartItem) {
+        cartStatus.count += cartItem.qty;
+        cartStatus.total += cartItem.product.price * cartItem.qty;
+      });
     }
-    return 0;
+
+    return cartStatus;
   }
 
+  incrementItemQty(cartItem: CartItem) {
+    cartItem.qty++;
+    this.cartChanged.next(this.getCartItemsCount());
+  }
+
+  decrementItemQty(cartItem: CartItem) {
+    cartItem.qty--;
+    this.cartChanged.next(this.getCartItemsCount());
+
+  }
+
+  removeItem(cartItem: CartItem) {
+    const index = this.cart.indexOf(cartItem);
+    this.cart.splice(index, 1);
+    this.cartChanged.next(this.getCartItemsCount());
+  }
 }

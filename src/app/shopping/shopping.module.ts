@@ -7,7 +7,7 @@ import {ProductCardComponent} from './product/product-card/product-card.componen
 import {CreateProductComponent} from './product/create-product/create-product.component';
 import { SingleProductComponent } from './product/single-product/single-product.component';
 import {CoreRoutingModule} from '../core/core-routing.module';
-import { CheckoutComponent } from './cart/checkout/checkout.component';
+import {CheckoutComponent} from './checkout/checkout.component';
 
 
 @NgModule({

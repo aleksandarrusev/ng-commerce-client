@@ -8,13 +8,27 @@ import {CartItem} from './cart-item.model';
   styleUrls: ['./cart.component.css']
 })
 export class CartComponent implements OnInit {
+  cartStatus: {
+    count: number,
+    total: number,
+  };
 
-  public cart: CartItem[];
+  cart: CartItem[];
   constructor(private cartService: CartService) { }
 
   ngOnInit() {
     this.cart = this.cartService.getAllCartItems();
-    console.log(this.cart);
+    this.cartService.cartChanged.subscribe((status) => {
+      this.cartStatus = status;
+    });
   }
-
+  incrementQty(cartItem) {
+    this.cartService.incrementItemQty(cartItem);
+  }
+  decrementQty(cartItem) {
+    this.cartService.decrementItemQty(cartItem);
+  }
+  removeItem(cartItem) {
+    this.cartService.removeItem(cartItem);
+  }
 }

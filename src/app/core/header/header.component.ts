@@ -26,8 +26,8 @@ export class HeaderComponent implements OnInit {
       this.isLoggedIn = value;
     });
 
-    this.cartService.cartChanged.subscribe((count) => {
-      this.cartItemsCount = count;
+    this.cartService.cartChanged.subscribe((status) => {
+      this.cartItemsCount = status.count;
     });
   }
 
