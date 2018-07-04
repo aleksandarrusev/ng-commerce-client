@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {OrderService} from '../../services/order.service';
 
 @Component({
@@ -8,20 +8,24 @@ import {OrderService} from '../../services/order.service';
 })
 export class CheckoutComponent implements OnInit {
 
-  constructor(private orderService: OrderService) { }
+  constructor(private orderService: OrderService) {
+  }
 
   ngOnInit() {
   }
 
-  onSubmit(formValue) {
-    // const address = {
-    //   name: formValue.name,
-    //   address: formValue.address,
-    //   address2: formValue.address ? formValue.address : null,
-    //   country: formValue.country,
-    //   city: formValue.city,
-    //   zip: formValue.zip
-    // };
-    this.orderService.submitOrder('asdf');
+  onSubmit(form) {
+    const formValue = form.value;
+
+    const address = {
+      name: formValue.name,
+      phone: formValue.phone,
+      address: formValue.address,
+      address2: formValue.address2 || null,
+      country: formValue.country,
+      city: formValue.city,
+      zip: formValue.zip
+    };
+    this.orderService.submitOrder(address);
   }
 }

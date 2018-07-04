@@ -4,6 +4,7 @@ import {Router} from '@angular/router';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {JwtHelperService} from '@auth0/angular-jwt';
 import {IUser} from '../auth/user.model';
+import {environment} from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -29,7 +30,7 @@ export class AuthService {
       })
     };
 
-    this.http.post('http://localhost:3000/api/users', userInput, httpOptions).subscribe(
+    this.http.post(`${environment.api}/users`, userInput, httpOptions).subscribe(
       (response: { token: String, user: IUser }) => {
         const {user, token} = response;
         this.setToken(token);
@@ -45,7 +46,7 @@ export class AuthService {
   login(email: String, password: String): void {
     const userCredentials = {email, password};
 
-    this.http.post('http://localhost:3000/api/auth', userCredentials).subscribe(
+    this.http.post(`${environment.api}/auth`, userCredentials).subscribe(
       (response: { token: String, user: IUser }) => {
         const {user, token} = response;
         this.setToken(token);

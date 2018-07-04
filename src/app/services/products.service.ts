@@ -4,6 +4,7 @@ import {Observable} from 'rxjs';
 
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {ICategory} from '../shopping/category.model';
+import {environment} from '../../environments/environment';
 @Injectable()
 export class ProductsService {
 
@@ -13,15 +14,15 @@ export class ProductsService {
   }
 
   fetchAllProducts() {
-    return this.http.get<IProduct[]>('http://localhost:3000/api/products');
+    return this.http.get<IProduct[]>(`${environment.api}/products/`);
   }
 
   fetchProductsByCategoryName(categoryName: string) {
-    return this.http.get<IProduct[]>('http://localhost:3000/api/categories/' + categoryName);
+    return this.http.get<IProduct[]>(`${environment.api}/categories/${categoryName}`);
   }
 
   fetchProductById(productId: string) {
-    return this.http.get<IProduct>('http://localhost:3000/api/products/' + productId);
+    return this.http.get<IProduct>(`${environment.api}/products/${productId}`);
   }
 
 
@@ -33,12 +34,12 @@ export class ProductsService {
     };
 
 
-    return this.http.post<Product>('http://localhost:3000/api/products/', product, httpOptions);
+    return this.http.post<Product>(`${environment.api}/products/`, product, httpOptions);
   }
 
 
   fetchAllCategories() {
-    return this.http.get<ICategory[]>('http://localhost:3000/api/categories');
+    return this.http.get<ICategory[]>(`${environment.api}/categories`);
   }
 
   // TODO

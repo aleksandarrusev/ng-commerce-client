@@ -8,18 +8,25 @@
     <div class="invalid-feedback" [ngClass]="{'was-validated': name.touched && name.invalid}">
       This field is required
     </div>
-
   </div>
+  <div class="form-group">
+    <label for="name">Phone</label>
+    <input type="text" class="form-control" id="phone" name="phone" ngModel #phone="ngModel" [ngClass]="{'is-invalid': phone.touched && phone.invalid}" required>
+    <div class="invalid-feedback" [ngClass]="{'was-validated': phone.touched && phone.invalid}">
+      This field is required
+    </div>
+  </div>
+
   <div class="form-group">
     <label for="address">Address 1</label>
     <input type="text" class="form-control" id="address" ngModel name="address" #address="ngModel" required [ngClass]="{'is-invalid': address.touched && address.invalid}">
-    <div class="invalid-feedback" [ngClass]="{'was-validated': name.touched && name.invalid}">
+    <div class="invalid-feedback" [ngClass]="{'was-validated': address.touched && address.invalid}">
       This field is required
     </div>
   </div>
   <div class="form-group">
     <label for="address2">Address 2 (optional)</label>
-    <input type="text" class="form-control" id="address2" ngModel name="address">
+    <input type="text" class="form-control" id="address2" ngModel name="address2">
   </div>
 
   <div class="row">
