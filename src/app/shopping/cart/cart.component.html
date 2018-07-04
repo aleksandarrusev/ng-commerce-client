@@ -37,6 +37,6 @@
     Total: {{ cartStatus.total | currency:'USD'}}
   </div>
   <div class="col-2">
-    <button class="btn btn-primary">Proceed to checkout</button>
+    <button class="btn btn-primary" (click)="validateCart()">Proceed to checkout</button>
   </div>
 </div>

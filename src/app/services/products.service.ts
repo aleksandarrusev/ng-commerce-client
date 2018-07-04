@@ -41,15 +41,10 @@ export class ProductsService {
     return this.http.get<ICategory[]>('http://localhost:3000/api/categories');
   }
 
-  setCategories(categories: ICategory[]) {
-    this.categories = categories;
-  }
-
-  getCategories() {
-    return this.categories;
-  }
+  // TODO
   isCategoryValid(categoryName) {
-
   }
+
+
 
 }

@@ -31,4 +31,7 @@ export class CartComponent implements OnInit {
   removeItem(cartItem) {
     this.cartService.removeItem(cartItem);
   }
+  validateCart() {
+    this.cartService.validateCart();
+  }
 }

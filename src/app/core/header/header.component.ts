@@ -13,7 +13,7 @@ export class HeaderComponent implements OnInit {
 
   @Input() categories: String[];
   cartItemsCount: number;
-  isLoggedIn: boolean;
+  isLoggedIn = false;
   constructor(private authService: AuthService, private cartService: CartService, private productService: ProductsService) {
   }
 
@@ -22,8 +22,12 @@ export class HeaderComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.authService.authStatusChanged.subscribe((value: boolean) => {
-      this.isLoggedIn = value;
+    this.authService.authStatus.subscribe((user) => {
+      if (user) {
+        this.isLoggedIn = true;
+        return;
+      }
+      this.isLoggedIn = false;
     });
 
     this.cartService.cartChanged.subscribe((status) => {

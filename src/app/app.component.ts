@@ -12,22 +12,11 @@ import {ICategory} from './shopping/category.model';
 export class AppComponent implements OnInit {
   cartItemsCount: number;
   categories: ICategory[];
-  constructor(private cartService: CartService,
-              private authService: AuthService,
-              private productService: ProductsService) {
-  }
+  constructor(private authService: AuthService, private productService: ProductsService) {}
 
   ngOnInit() {
     this.productService.fetchAllCategories().subscribe((categories) => {
-      this.productService.setCategories(categories);
       this.categories = categories;
-    });
-    if (this.authService.isLoggedIn()) {
-      this.authService.authStatusChanged.next(true);
-    }
-
-    this.cartService.cartChanged.subscribe((count) => {
-      this.cartItemsCount = count;
     });
   }
 }

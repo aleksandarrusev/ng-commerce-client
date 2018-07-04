@@ -13,6 +13,12 @@ import {CoreModule} from './core/core.module';
 import {AuthModule} from './auth/auth.module';
 import {HttpClientModule} from '@angular/common/http';
 import {ToastrModule} from 'ngx-toastr';
+import {OrderService} from './services/order.service';
+import {JwtHelperService, JwtModule} from '@auth0/angular-jwt';
+
+export function tokenGetter() {
+  return localStorage.getItem('token');
+}
 
 @NgModule({
   declarations: [
@@ -27,13 +33,21 @@ import {ToastrModule} from 'ngx-toastr';
     ShoppingModule,
     AuthModule,
     HttpClientModule,
-
+    JwtModule.forRoot({
+      config: {
+        tokenGetter: tokenGetter,
+        whitelistedDomains: ['localhost:3000'],
+        blacklistedRoutes: []
+      }
+    })
   ],
   providers: [
     AuthService,
     CartService,
     ProductsService,
     AuthGuardService,
+    OrderService,
+    JwtHelperService,
   ],
   bootstrap: [AppComponent]
 })

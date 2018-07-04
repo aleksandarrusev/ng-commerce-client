@@ -2,27 +2,23 @@ import {Injectable} from '@angular/core';
 import {BehaviorSubject, Observable, Subject} from 'rxjs';
 import {Router} from '@angular/router';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {JwtHelperService} from '@auth0/angular-jwt';
+import {IUser} from '../auth/user.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
-  public userDetails;
-  public authStatusChanged: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(this.isTokenAvailable());
+  public authStatus: BehaviorSubject<IUser | null> = new BehaviorSubject<IUser | null>(this.getTokenData());
 
-  constructor(private router: Router, private http: HttpClient) {
-  }
-
-  isLoggedIn() {
-    if (!this.isTokenAvailable()) {
-      return false;
-    }
-    return true;
+  constructor(private router: Router,
+              private http: HttpClient,
+              private jwtService: JwtHelperService) {
   }
 
   register(name: String, email: String, password: String): void {
-    const user = {
+    const userInput = {
       name,
       email,
       password,
@@ -33,12 +29,11 @@ export class AuthService {
       })
     };
 
-    this.http.post('http://localhost:3000/api/users', user, httpOptions).subscribe(
-      (response: Response) => {
-        this.userDetails = response['user'];
-        this.setToken(response['token']);
-
-        this.authStatusChanged.next(true);
+    this.http.post('http://localhost:3000/api/users', userInput, httpOptions).subscribe(
+      (response: { token: String, user: IUser }) => {
+        const {user, token} = response;
+        this.setToken(token);
+        this.authStatus.next(user);
         this.router.navigate(['/']);
       },
       (error) => {
@@ -48,15 +43,13 @@ export class AuthService {
   }
 
   login(email: String, password: String): void {
-    const user = {email, password};
+    const userCredentials = {email, password};
 
-
-    this.http.post('http://localhost:3000/api/auth', user).subscribe(
-      (response: Response) => {
-        this.userDetails = response['user'];
-        this.setToken(response['token']);
-
-        this.authStatusChanged.next(true);
+    this.http.post('http://localhost:3000/api/auth', userCredentials).subscribe(
+      (response: { token: String, user: IUser }) => {
+        const {user, token} = response;
+        this.setToken(token);
+        this.authStatus.next(user);
         this.router.navigate(['/']);
       },
       (error) => {
@@ -66,23 +59,54 @@ export class AuthService {
   }
 
   logout() {
-    localStorage.removeItem('jwt_token');
+    localStorage.removeItem('token');
     this.router.navigate(['/login']);
-    this.authStatusChanged.next(false);
+    this.authStatus.next(null);
   }
 
-  private setToken(token) {
-    localStorage.setItem('jwt_token', token);
+  public setToken(token) {
+    localStorage.setItem('token', token);
+  }
+
+
+  private isAuthenticated(): boolean {
+    const token = this.getToken();
+
+    return !this.jwtService.isTokenExpired(token);
+  }
+
+  getTokenData() {
+    const token = this.getToken();
+    if (this.jwtService.isTokenExpired(token)) {
+      return this.jwtService.decodeToken(token);
+    }
+    return false;
+  }
+
+  public getUser(): IUser {
+    let user;
+    this.authStatus.subscribe((userData) => {
+      user = userData;
+    });
+    return user;
+  }
+
+  public isLoggedIn(): boolean {
+    let isLoggedIn = false;
+    this.authStatus.subscribe((user) => {
+      if (user) {
+        isLoggedIn = true;
+      }
+    });
+    return isLoggedIn;
   }
 
   private getToken() {
-    return localStorage.getItem('jwt_token');
+    return localStorage.getItem('token');
   }
-
 
   private isTokenAvailable() {
-    return !!localStorage.getItem('jwt_token');
+    return !!localStorage.getItem('token');
   }
-
 
 }

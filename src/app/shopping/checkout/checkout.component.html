@@ -1,3 +1,66 @@
-<p>
-  checkout works!
-</p>
+<h1>Checkout</h1>
+
+<form #form="ngForm" (submit)="onSubmit(form)">
+
+  <div class="form-group">
+    <label for="name">Name</label>
+    <input type="text" class="form-control" id="name" name="name" ngModel #name="ngModel" [ngClass]="{'is-invalid': name.touched && name.invalid}" required>
+    <div class="invalid-feedback" [ngClass]="{'was-validated': name.touched && name.invalid}">
+      This field is required
+    </div>
+
+  </div>
+  <div class="form-group">
+    <label for="address">Address 1</label>
+    <input type="text" class="form-control" id="address" ngModel name="address" #address="ngModel" required [ngClass]="{'is-invalid': address.touched && address.invalid}">
+    <div class="invalid-feedback" [ngClass]="{'was-validated': name.touched && name.invalid}">
+      This field is required
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="address2">Address 2 (optional)</label>
+    <input type="text" class="form-control" id="address2" ngModel name="address">
+  </div>
+
+  <div class="row">
+    <div class="col-md-5 mb-3">
+      <label for="country">Country</label>
+      <select class="custom-select d-block w-100" ngModel #country="ngModel" name="country" id="country" required [ngClass]="{'is-invalid': country.touched && country.invalid}">
+        <option value="">Choose...</option>
+        <option value="Bulgaria">Bulgaria</option>
+        <option value="Germany">Germany</option>
+        <option value="France">France</option>
+      </select>
+      <div class="invalid-feedback">
+        This field is required.
+      </div>
+    </div>
+    <div class="col-md-4 mb-3">
+      <label for="city">City</label>
+      <input type="text" class="form-control" id="city" ngModel name="city" #city="ngModel" required [ngClass]="{'is-invalid': city.touched && city.invalid}">
+      <div class="invalid-feedback">
+        This field is required.
+      </div>
+    </div>
+    <div class="col-md-3 mb-3">
+      <label for="zip">Zip</label>
+      <input type="text" class="form-control" id="zip" name="zip" ngModel #zip="ngModel" required [ngClass]="{'is-invalid': zip.touched && zip.invalid}">
+      <div class="invalid-feedback">
+        This field is required.
+      </div>
+    </div>
+  </div>
+  <div class="row flex-column align-items-end">
+    <div class="col-3 mt-3">
+      <h4 class="text-right">Shipping: {{ 5 | currency:'USD'}}</h4>
+    </div>
+
+    <div class="col-3 mt-3">
+      <h3 class="text-right">Total: {{ 123 | currency:'USD'}}</h3>
+    </div>
+    <div class="col-3 mt-2 text-right">
+      <button class="btn btn-lg btn-primary" routerLink="/checkout">Place order</button>
+    </div>
+  </div>
+
+</form>
