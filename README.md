@@ -15,7 +15,7 @@ You will find the API repo    [here](https://github.com/aleksandarrusev/ng-comme
 
 
 # Demo
-![Demo](https://media.giphy.com/media/jxa5KcjuEQQw4PuPTB/giphy.gif)
+![Demo](https://media.giphy.com/media/7Xv3bFlnBuKO2mYHxi/giphy.gif)
 
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 6.0.5.
