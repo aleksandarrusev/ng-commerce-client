@@ -13,6 +13,7 @@ The next improvements will be:
 
 
 #Demo
+![Demo](https://media.giphy.com/media/jxa5KcjuEQQw4PuPTB/giphy.gif)
 
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 6.0.5.
