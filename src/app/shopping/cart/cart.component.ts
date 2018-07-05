@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {CartService} from '../../services/cart.service';
 import {CartItem} from './cart-item.model';
+import {Location} from '@angular/common';
 
 @Component({
   selector: 'app-cart',
@@ -14,7 +15,8 @@ export class CartComponent implements OnInit {
   };
 
   cart: CartItem[];
-  constructor(private cartService: CartService) { }
+  constructor(private cartService: CartService,
+              private location: Location) { }
 
   ngOnInit() {
     this.cart = this.cartService.getAllCartItems();
@@ -33,5 +35,9 @@ export class CartComponent implements OnInit {
   }
   validateCart() {
     this.cartService.validateCart();
+  }
+
+  goBack() {
+    this.location.back();
   }
 }

@@ -1,5 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {OrderService} from '../../services/order.service';
+import {CartService} from '../../services/cart.service';
 
 @Component({
   selector: 'app-checkout',
@@ -7,11 +8,13 @@ import {OrderService} from '../../services/order.service';
   styleUrls: ['./checkout.component.css']
 })
 export class CheckoutComponent implements OnInit {
+  total: number;
 
-  constructor(private orderService: OrderService) {
+  constructor(private orderService: OrderService, private cartService: CartService) {
   }
 
   ngOnInit() {
+    this.total = this.cartService.cartValidated.getValue();
   }
 
   onSubmit(form) {

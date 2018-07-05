@@ -1,8 +1,9 @@
-import {Component, DoCheck, EventEmitter, Input, OnChanges, OnInit, Output} from '@angular/core';
-import {Subject} from 'rxjs';
+import {Component, OnInit } from '@angular/core';
+import {Observable, Subject} from 'rxjs';
 import {AuthService} from '../../services/auth.service';
 import {CartService} from '../../services/cart.service';
 import {ProductsService} from '../../services/products.service';
+import {ICategory} from '../../shopping/category.model';
 
 @Component({
   selector: 'app-header',
@@ -11,7 +12,7 @@ import {ProductsService} from '../../services/products.service';
 })
 export class HeaderComponent implements OnInit {
 
-  @Input() categories: String[];
+  categories$: Observable<ICategory[]>;
   cartItemsCount: number;
   isLoggedIn = false;
   constructor(private authService: AuthService, private cartService: CartService, private productService: ProductsService) {
@@ -30,9 +31,10 @@ export class HeaderComponent implements OnInit {
       this.isLoggedIn = false;
     });
 
-    this.cartService.cartChanged.subscribe((status) => {
-      this.cartItemsCount = status.count;
+    this.cartService.cartChanged.subscribe((cartStatus) => {
+      this.cartItemsCount = cartStatus.count;
     });
+    this.categories$ = this.productService.fetchAllCategories();
   }
 
 }

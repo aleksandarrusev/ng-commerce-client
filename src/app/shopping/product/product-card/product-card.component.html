@@ -1,10 +1,11 @@
-<div class="card" style="width: 18rem;">
+<div class="card">
   <div class="card-img" style="height:200px;">
     <img class="card-img-top" [src]="product.imageURL" style="max-height:100%;object-fit: contain" alt="Card image cap">
   </div>
   <div class="card-body">
     <h5 class="card-title"><a [routerLink]="'/product/' + product._id">{{ product.name }}</a></h5>
-    <p class="card-text">Category: {{ product.category.name }}</p>
-    <button class="btn btn-dark" (click)="addToCart(product)">Add to cart <i class="fas fa-shopping-cart"></i></button>
+    <p><strong>{{ product.price | currency:'USD' }}</strong></p>
+    <button class="btn btn-primary" (click)="addToCart(product)">Add to cart <i class="fas fa-shopping-cart"></i>
+    </button>
   </div>
 </div>

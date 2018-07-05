@@ -8,6 +8,7 @@ import {CreateProductComponent} from './product/create-product/create-product.co
 import { SingleProductComponent } from './product/single-product/single-product.component';
 import {CoreRoutingModule} from '../core/core-routing.module';
 import {CheckoutComponent} from './checkout/checkout.component';
+import { OrderCompletedComponent } from './order-completed/order-completed.component';
 
 
 @NgModule({
@@ -23,6 +24,7 @@ import {CheckoutComponent} from './checkout/checkout.component';
     CreateProductComponent,
     SingleProductComponent,
     CheckoutComponent,
+    OrderCompletedComponent,
   ]
 })
 export class ShoppingModule { }

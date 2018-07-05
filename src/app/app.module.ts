@@ -15,6 +15,8 @@ import {HttpClientModule} from '@angular/common/http';
 import {ToastrModule} from 'ngx-toastr';
 import {OrderService} from './services/order.service';
 import {JwtHelperService, JwtModule} from '@auth0/angular-jwt';
+import {FooterComponent} from './core/footer/footer.component';
+import {CartValidatedGuardService} from './shopping/cart-validated.guard.service';
 
 export function tokenGetter() {
   return localStorage.getItem('token');
@@ -23,6 +25,7 @@ export function tokenGetter() {
 @NgModule({
   declarations: [
     AppComponent,
+    // FooterComponent,
   ],
   imports: [
     BrowserModule,
@@ -48,6 +51,7 @@ export function tokenGetter() {
     AuthGuardService,
     OrderService,
     JwtHelperService,
+    CartValidatedGuardService
   ],
   bootstrap: [AppComponent]
 })

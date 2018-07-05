@@ -6,13 +6,15 @@ import {ICategory} from '../shopping/category.model';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {Router} from '@angular/router';
 import {environment} from '../../environments/environment';
+import {ToastrService} from 'ngx-toastr';
 
 @Injectable()
 export class CartService {
   private cart: CartItem[] = [];
+  cartValidated: BehaviorSubject<number | null> = new BehaviorSubject<number | null>(null);
   cartChanged: BehaviorSubject<any> = new BehaviorSubject<any>(0);
 
-  constructor(private http: HttpClient, private router: Router) {
+  constructor(private http: HttpClient, private router: Router, private toastrService: ToastrService) {
   }
 
   add(product: IProduct) {
@@ -75,10 +77,11 @@ export class CartService {
     cartObj.products = this.getAllCartItemsRaw();
     this.http.post<{ total: number }>(`${environment.api}/checkout`, cartObj, httpOptions).subscribe((result) => {
       if (result.total > 0) {
+        this.cartValidated.next(result.total);
         this.router.navigate(['/checkout']);
       }
     }, (error) => {
-      console.log(error);
+      this.toastrService.error(error);
     });
   }
 
@@ -90,6 +93,10 @@ export class CartService {
         qty: item.qty
       };
     });
+  }
+  public emptyCart() {
+    this.cart = [];
+    this.cartChanged.next(this.getCartItemsCount());
   }
 
 }

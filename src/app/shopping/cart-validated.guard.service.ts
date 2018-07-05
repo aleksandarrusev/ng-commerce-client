@@ -1,21 +1,22 @@
 import {Injectable} from '@angular/core';
 import {ActivatedRouteSnapshot, CanActivate, Router} from '@angular/router';
 import {Observable} from 'rxjs';
-import {AuthService} from './auth.service';
 import {map, first} from 'rxjs/operators';
+import {CartService} from '../services/cart.service';
 
 @Injectable()
-export class AuthGuardService implements CanActivate {
+export class CartValidatedGuardService implements CanActivate {
 
-  constructor(public authService: AuthService, public router: Router) {
+  constructor(public cartService: CartService, public router: Router) {
   }
 
   canActivate(route: ActivatedRouteSnapshot): Observable<boolean> {
-    return this.authService.authStatus.pipe
-    (map(((user) => {
-      if (user) {
+    return this.cartService.cartValidated.pipe
+    (map(((validated) => {
+      if (validated) {
         return true;
       }
+      this.router.navigate(['/']);
       return false;
     })), first());
   }

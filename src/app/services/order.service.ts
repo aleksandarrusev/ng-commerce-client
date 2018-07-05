@@ -30,7 +30,8 @@ export class OrderService {
     const orderData = {user, products, address};
 
     this.http.post(`${environment.api}/orders`, orderData, httpOptions).subscribe((result) => {
-      console.log(result);
+      this.toastrService.success('Your order has been successfully submitted.');
+      this.router.navigate(['/order-completed']);
     }, (error) => {
       this.toastrService.error(error.error);
     });

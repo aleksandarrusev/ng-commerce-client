@@ -1,42 +1,50 @@
-<table class="table">
-  <thead>
-  <tr>
-    <th scope="col">Image</th>
-    <th scope="col">Name</th>
-    <th scope="col">Price</th>
-    <th scope="col">Category</th>
-    <th scope="col">Qty</th>
-    <th scope="col"></th>
+<ng-container *ngIf="cartStatus.count > 1">
+  <table class="table">
+    <thead>
+    <tr>
+      <th scope="col">Image</th>
+      <th scope="col">Name</th>
+      <th scope="col">Price</th>
+      <th scope="col">Category</th>
+      <th scope="col">Qty</th>
+      <th scope="col"></th>
 
-  </tr>
-  </thead>
-  <tbody>
-  <tr *ngFor="let cartItem of cart">
-    <td>
-      <div class="table-image-container"><img [src]="cartItem.product.imageURL" alt=""></div>
-    </td>
-    <td>{{ cartItem.product.name }}</td>
-    <td>{{ cartItem.product.price | currency:'USD' }}</td>
-    <td>{{ cartItem.product.category.name | titlecase }}</td>
-    <td>
-      <div class="form-inline">
-        <button class="btn btn-light" (click)="decrementQty(cartItem)" [disabled]="cartItem.qty <= 1">-</button>
-        <input class="form-control qty-control" style="display:inline-block" type="text" [value]="cartItem.qty">
-      <button class="btn btn-light" (click)="incrementQty(cartItem)">+</button>
-      </div>
-    </td>
-    <td>
-      <i class="fas fa-trash" (click)="removeItem(cartItem)"></i>
-    </td>
-  </tr>
-  <tr>
-  </tbody>
-</table>
-<div class="row flex-column align-items-end">
-  <div class="col-2 mt-3 mb-3">
-    Total: {{ cartStatus.total | currency:'USD'}}
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let cartItem of cart">
+      <td>
+        <div class="table-image-container"><img [src]="cartItem.product.imageURL" alt=""></div>
+      </td>
+      <td>{{ cartItem.product.name }}</td>
+      <td>{{ cartItem.product.price | currency:'USD' }}</td>
+      <td>{{ cartItem.product.category.name | titlecase }}</td>
+      <td>
+        <div class="form-inline">
+          <button class="btn btn-light" (click)="decrementQty(cartItem)" [disabled]="cartItem.qty <= 1">-</button>
+          <input class="form-control qty-control" style="display:inline-block" type="text" [value]="cartItem.qty">
+          <button class="btn btn-light" (click)="incrementQty(cartItem)">+</button>
+        </div>
+      </td>
+      <td>
+        <i class="fas fa-trash" (click)="removeItem(cartItem)"></i>
+      </td>
+    </tr>
+    <tr>
+    </tbody>
+  </table>
+  <div class="row flex-column align-items-end">
+    <div class="col-2 mt-3 mb-3">
+      Total: {{ cartStatus.total | currency:'USD'}}
+    </div>
+    <div class="col-2">
+      <button class="btn btn-primary" (click)="validateCart()">Proceed to checkout</button>
+    </div>
   </div>
-  <div class="col-2">
-    <button class="btn btn-primary" (click)="validateCart()">Proceed to checkout</button>
-  </div>
-</div>
+</ng-container>
+<ng-container *ngIf="!cartStatus.count">
+<div class="alert alert-info" > Your cart is currently empty. </div>
+<button class="btn btn-primary" (click)="goBack()">
+  Go back
+</button>
+</ng-container>

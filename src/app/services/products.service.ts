@@ -1,14 +1,13 @@
 import {IProduct, Product} from '../shopping/product/product.model';
 import {Injectable} from '@angular/core';
-import {Observable} from 'rxjs';
+import {BehaviorSubject, Observable, Subject} from 'rxjs';
 
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {ICategory} from '../shopping/category.model';
 import {environment} from '../../environments/environment';
+
 @Injectable()
 export class ProductsService {
-
-  categories: ICategory[];
 
   constructor(private http: HttpClient) {
   }
@@ -29,7 +28,7 @@ export class ProductsService {
   createProduct(product) {
     const httpOptions = {
       headers: new HttpHeaders({
-        'Content-Type':  'application/json',
+        'Content-Type': 'application/json',
       })
     };
 
@@ -42,10 +41,12 @@ export class ProductsService {
     return this.http.get<ICategory[]>(`${environment.api}/categories`);
   }
 
-  // TODO
-  isCategoryValid(categoryName) {
-  }
-
-
+  // isCategoryValid(categoryName) {
+  //   const categoryNames = this.categories.map((categoryObj) => categoryObj.name);
+  //   if (categoryNames.includes(categoryName)) {
+  //     return true;
+  //   }
+  //   return false;
+  // }
 
 }

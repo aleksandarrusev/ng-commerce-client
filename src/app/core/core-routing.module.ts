@@ -9,6 +9,8 @@ import {CreateProductComponent} from '../shopping/product/create-product/create-
 import {RegisterComponent} from '../auth/register/register.component';
 import {SingleProductComponent} from '../shopping/product/single-product/single-product.component';
 import {CheckoutComponent} from '../shopping/checkout/checkout.component';
+import {OrderCompletedComponent} from '../shopping/order-completed/order-completed.component';
+import {CartValidatedGuardService} from '../shopping/cart-validated.guard.service';
 
 
 const routes: Route[] = [
@@ -17,9 +19,10 @@ const routes: Route[] = [
   {path: 'cart', component: CartComponent},
   {path: 'login', component: LoginComponent},
   {path: 'register', component: RegisterComponent},
-  {path: 'checkout', component: CheckoutComponent},
+  {path: 'checkout', component: CheckoutComponent, canActivate: [AuthGuardService, CartValidatedGuardService]},
   {path: 'category/:category-name', component: CategoryComponent},
   {path: 'product/:product-id', component: SingleProductComponent},
+  {path: 'order-completed', component: OrderCompletedComponent},
 
 ];
 
