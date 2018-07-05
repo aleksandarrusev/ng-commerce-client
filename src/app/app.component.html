@@ -1,5 +1,5 @@
 <app-header></app-header>
-<div class="container pt-3 main">
-  <router-outlet></router-outlet>
+<div class="container pt-3 main" style="position: relative" [@fadeAnimation]="getPage(outlet)">
+  <router-outlet #outlet="outlet"></router-outlet>
 </div>
 <app-footer></app-footer>

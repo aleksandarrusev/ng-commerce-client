@@ -17,7 +17,7 @@
         </li>
       </ul>
       <ul class="navbar-nav ml-auto">
-        <ng-container *ngIf="!isLoggedIn">
+        <ng-container *ngIf="!user">
           <li class="nav-item">
             <a class="nav-link" routerLinkActive="active" routerLink="/login">Login</a>
           </li>
@@ -25,7 +25,14 @@
             <a class="nav-link" routerLink="/register">Register</a>
           </li>
         </ng-container>
-        <ng-container *ngIf="isLoggedIn">
+        <ng-container *ngIf="user">
+          <li class="nav-item" *ngIf="user.isAdmin">
+            <a class="nav-link" (click)="logout()">Admin</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" (click)="logout()">Account</a>
+          </li>
+
           <li class="nav-item">
             <a class="nav-link" (click)="logout()">Logout</a>
           </li>

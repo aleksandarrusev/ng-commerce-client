@@ -102,7 +102,7 @@ export class AuthService {
     return isLoggedIn;
   }
 
-  private getToken() {
+  public getToken() {
     return localStorage.getItem('token');
   }
 

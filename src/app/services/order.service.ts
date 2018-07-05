@@ -5,10 +5,11 @@ import {AuthService} from './auth.service';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {ToastrService} from 'ngx-toastr';
 import {environment} from '../../environments/environment';
+import {BehaviorSubject} from 'rxjs';
 
 @Injectable()
 export class OrderService {
-
+  orderCompleted: BehaviorSubject<any> = new BehaviorSubject<any>(null);
   constructor(private router: Router,
               private cartService: CartService,
               private authService: AuthService,
@@ -31,6 +32,7 @@ export class OrderService {
 
     this.http.post(`${environment.api}/orders`, orderData, httpOptions).subscribe((result) => {
       this.toastrService.success('Your order has been successfully submitted.');
+      this.orderCompleted.next(result);
       this.router.navigate(['/order-completed']);
     }, (error) => {
       this.toastrService.error(error.error);

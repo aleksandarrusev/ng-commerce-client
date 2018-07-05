@@ -11,6 +11,7 @@ import {SingleProductComponent} from '../shopping/product/single-product/single-
 import {CheckoutComponent} from '../shopping/checkout/checkout.component';
 import {OrderCompletedComponent} from '../shopping/order-completed/order-completed.component';
 import {CartValidatedGuardService} from '../shopping/cart-validated.guard.service';
+import {OrderCompletedGuard} from '../shopping/order-completed/order-completed.guard';
 
 
 const routes: Route[] = [
@@ -22,8 +23,7 @@ const routes: Route[] = [
   {path: 'checkout', component: CheckoutComponent, canActivate: [AuthGuardService, CartValidatedGuardService]},
   {path: 'category/:category-name', component: CategoryComponent},
   {path: 'product/:product-id', component: SingleProductComponent},
-  {path: 'order-completed', component: OrderCompletedComponent},
-
+  {path: 'order-completed', component: OrderCompletedComponent, canActivate: [AuthGuardService, CartValidatedGuardService, OrderCompletedGuard]},
 ];
 
 

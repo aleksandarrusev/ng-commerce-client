@@ -15,6 +15,7 @@ export class HeaderComponent implements OnInit {
   categories$: Observable<ICategory[]>;
   cartItemsCount: number;
   isLoggedIn = false;
+  user;
   constructor(private authService: AuthService, private cartService: CartService, private productService: ProductsService) {
   }
 
@@ -25,10 +26,10 @@ export class HeaderComponent implements OnInit {
   ngOnInit() {
     this.authService.authStatus.subscribe((user) => {
       if (user) {
-        this.isLoggedIn = true;
+        this.user = user;
         return;
       }
-      this.isLoggedIn = false;
+      this.user = null;
     });
 
     this.cartService.cartChanged.subscribe((cartStatus) => {

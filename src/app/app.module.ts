@@ -6,17 +6,16 @@ import {CartService} from './services/cart.service';
 import {FormsModule} from '@angular/forms';
 import {ProductsService} from './services/products.service';
 import { AuthService} from './services/auth.service';
-import { environment } from '../environments/environment';
 import {AuthGuardService} from './services/auth-guard.service';
 import {ShoppingModule} from './shopping/shopping.module';
 import {CoreModule} from './core/core.module';
 import {AuthModule} from './auth/auth.module';
-import {HttpClientModule} from '@angular/common/http';
+import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import {ToastrModule} from 'ngx-toastr';
 import {OrderService} from './services/order.service';
 import {JwtHelperService, JwtModule} from '@auth0/angular-jwt';
-import {FooterComponent} from './core/footer/footer.component';
 import {CartValidatedGuardService} from './shopping/cart-validated.guard.service';
+import {TokenInterceptorService} from './auth/token-interceptor.service';
 
 export function tokenGetter() {
   return localStorage.getItem('token');
@@ -51,7 +50,13 @@ export function tokenGetter() {
     AuthGuardService,
     OrderService,
     JwtHelperService,
-    CartValidatedGuardService
+    CartValidatedGuardService,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: TokenInterceptorService,
+      multi: true
+    }
+
   ],
   bootstrap: [AppComponent]
 })
