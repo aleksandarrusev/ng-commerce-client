@@ -12,7 +12,7 @@ The next improvements will be:
 * replacing the template driven forms to reactive forms
 
 
-#Demo
+# Demo
 ![Demo](https://media.giphy.com/media/jxa5KcjuEQQw4PuPTB/giphy.gif)
 
 
