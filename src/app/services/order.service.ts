@@ -6,6 +6,7 @@ import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {ToastrService} from 'ngx-toastr';
 import {environment} from '../../environments/environment';
 import {BehaviorSubject} from 'rxjs';
+import {httpOptions} from '../shared/httpOptions';
 
 @Injectable()
 export class OrderService {
@@ -17,11 +18,6 @@ export class OrderService {
               private http: HttpClient) { }
 
   submitOrder(address) {
-    const httpOptions = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json',
-      })
-    };
     const products = this.cartService.getAllCartItemsRaw();
     const userRaw = this.authService.getUser();
     const user = {

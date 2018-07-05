@@ -7,10 +7,10 @@
       <img [src]="product.imageURL" class="img-fluid">
     </div>
     <div class="col-sm-7 offset-sm-1">
-      <h1>{{ product.name }}</h1>
-      <h5 class="mt-4">Stock: {{ product.numberInStock }}</h5>
-      <h4 class="mt-4">Price: {{ product.price}}$</h4>
-      <button class="btn btn-lg btn-dark mt-3">Add to cart <i class="fas fa-shopping-cart"></i></button>
+      <h2>{{ product.name }}</h2>
+      <p class="mt-4"><strong>{{ product.numberInStock }}</strong> in stock</p>
+      <h4 class="mt-4">Price: <strong>{{ product.price}}$</strong></h4>
+      <button class="btn btn-lg btn-dark mt-3" (click)="addToCart(product)">Add to cart <i class="fas fa-shopping-cart"></i></button>
     </div>
   </div>
   <div class="row mt-4 justify-content-center" *ngIf="product.description">

@@ -1,5 +1,5 @@
 <h1>Cart</h1>
-<ng-container *ngIf="cartStatus.count > 1">
+<ng-container *ngIf="cartStatus.count >= 1">
   <table class="table">
     <thead>
     <tr>
@@ -34,11 +34,16 @@
     <tr>
     </tbody>
   </table>
-  <div class="row flex-column align-items-end">
-    <div class="col-2 mt-3 mb-3">
-      Total: {{ cartStatus.total | currency:'USD'}}
+
+  <div class="row flex-column align-items-center align-items-md-end">
+    <div class="col-12 col-sm-3 mt-3">
+      <h5 class="text-center text-sm-right">Shipping: <i>Free</i></h5>
     </div>
-    <div class="col-2">
+
+    <div class="col-12 col-sm-3">
+      <h4 class="text-center text-sm-right">Total: {{ cartStatus.total | currency:'USD'}}</h4>
+    </div>
+    <div class="col-12 col-sm-3 text-center text-sm-right">
       <button class="btn btn-primary" (click)="validateCart()">Proceed to checkout</button>
     </div>
   </div>

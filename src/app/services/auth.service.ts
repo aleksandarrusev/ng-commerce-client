@@ -5,6 +5,7 @@ import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {JwtHelperService} from '@auth0/angular-jwt';
 import {IUser} from '../auth/user.model';
 import {environment} from '../../environments/environment';
+import {httpOptions} from '../shared/httpOptions';
 
 @Injectable({
   providedIn: 'root'
@@ -23,11 +24,6 @@ export class AuthService {
       name,
       email,
       password,
-    };
-    const httpOptions = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json',
-      })
     };
 
     this.http.post(`${environment.api}/users`, userInput, httpOptions).subscribe(

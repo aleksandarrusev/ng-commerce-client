@@ -7,6 +7,7 @@ import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {Router} from '@angular/router';
 import {environment} from '../../environments/environment';
 import {ToastrService} from 'ngx-toastr';
+import {httpOptions} from '../shared/httpOptions';
 
 @Injectable()
 export class CartService {
@@ -27,7 +28,7 @@ export class CartService {
     } else {
       this.cart.push(new CartItem(product, 1));
     }
-
+    this.toastrService.success('You successfully added a product to your cart!');
     this.cartChanged.next(this.getCartItemsCount());
   }
 
@@ -68,11 +69,6 @@ export class CartService {
   }
 
   validateCart() {
-    const httpOptions = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json',
-      })
-    };
     const cartObj = {products: []};
     cartObj.products = this.getAllCartItemsRaw();
     this.http.post<{ total: number }>(`${environment.api}/checkout`, cartObj, httpOptions).subscribe((result) => {

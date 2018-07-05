@@ -11,14 +11,12 @@ import {ToastrService} from 'ngx-toastr';
 })
 export class ProductCardComponent implements OnInit {
   @Input() product: Product;
-  @Input() qty: number;
 
-  constructor(private cartService: CartService, private toastrService: ToastrService) {
+  constructor(private cartService: CartService) {
   }
 
   addToCart(product: IProduct): void {
     this.cartService.add(product);
-    this.toastrService.success('You successfully added a product to your cart!');
   }
 
   ngOnInit() {

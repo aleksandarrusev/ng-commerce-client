@@ -2,9 +2,10 @@ import {IProduct, Product} from '../shopping/product/product.model';
 import {Injectable} from '@angular/core';
 import {BehaviorSubject, Observable, Subject} from 'rxjs';
 
-import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 import {ICategory} from '../shopping/category.model';
 import {environment} from '../../environments/environment';
+import {httpOptions} from '../shared/httpOptions';
 
 @Injectable()
 export class ProductsService {
@@ -12,12 +13,19 @@ export class ProductsService {
   constructor(private http: HttpClient) {
   }
 
-  fetchAllProducts() {
+  fetchLatestProducts() {
     return this.http.get<IProduct[]>(`${environment.api}/products/`);
   }
 
-  fetchProductsByCategoryName(categoryName: string) {
-    return this.http.get<IProduct[]>(`${environment.api}/categories/${categoryName}`);
+  fetchProductsByCategoryName(categoryName: string, parameters: {} | null = null) {
+
+    const params = new HttpParams({
+      fromObject: {
+        ...parameters
+      }
+    });
+
+    return this.http.get<IProduct[]>(`${environment.api}/categories/${categoryName}`, {params: params});
   }
 
   fetchProductById(productId: string) {
@@ -26,11 +34,6 @@ export class ProductsService {
 
 
   createProduct(product) {
-    const httpOptions = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json',
-      })
-    };
 
 
     return this.http.post<Product>(`${environment.api}/products/`, product, httpOptions);
