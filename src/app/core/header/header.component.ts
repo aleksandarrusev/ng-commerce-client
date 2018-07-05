@@ -1,9 +1,10 @@
-import {Component, OnInit } from '@angular/core';
-import {Observable, Subject} from 'rxjs';
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Observable, Subject, Subscription} from 'rxjs';
 import {AuthService} from '../../services/auth.service';
 import {CartService} from '../../services/cart.service';
 import {ProductsService} from '../../services/products.service';
 import {ICategory} from '../../shopping/category.model';
+import {IUser} from '../../auth/user.model';
 
 @Component({
   selector: 'app-header',
@@ -14,8 +15,13 @@ export class HeaderComponent implements OnInit {
 
   categories$: Observable<ICategory[]>;
   cartItemsCount: number;
-  isLoggedIn = false;
-  user;
+  user: IUser;
+  show = false;
+
+  toggleCollapse() {
+    this.show = !this.show
+  }
+
   constructor(private authService: AuthService, private cartService: CartService, private productService: ProductsService) {
   }
 

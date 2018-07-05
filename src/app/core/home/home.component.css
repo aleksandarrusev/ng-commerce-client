@@ -1,0 +1,10 @@
+.jumbotron {
+  background: url('https://i.pinimg.com/originals/3e/2e/a4/3e2ea435bd6106fbf40212192c5138db.jpg') center center;
+  background-size:cover;
+  background-color:rgba(255,255,255,0.4);
+  box-shadow:inset 0 0 0 2000px rgba(255,255,255,0.5);
+}
+h1.home {
+  background:#fff;
+  font-weight:bold;
+}

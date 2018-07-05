@@ -1,22 +1,23 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark navbar">
   <div class="container">
-    <a class="navbar-brand" routerLink="">Shopping-list</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+    <a class="navbar-brand"  routerLink="/">ng-commerce</a>
+    <button class="navbar-toggler" (click)="toggleCollapse()" type="button" data-toggle="collapse" data-target="#navbarNav"
             aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
+    <div class="collapse navbar-collapse" [class.show]="show" id="navbarNav">
       <ul class="navbar-nav mr-auto">
 
         <li class="nav-item" *ngFor="let category of categories$ | async">
           <a class="nav-link" routerLinkActive="active" [routerLink]="'/category/' + category.name.toLowerCase()">{{
             category.name | titlecase }}</a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/cart">Cart<span class="badge badge-primary ml-2" *ngIf="cartItemsCount">{{ cartItemsCount }} </span></a>
-        </li>
       </ul>
       <ul class="navbar-nav ml-auto">
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/cart"><i class="fas fa-shopping-cart"></i><span class="badge badge-primary ml-2" *ngIf="cartItemsCount">{{ cartItemsCount }} </span></a>
+        </li>
+
         <ng-container *ngIf="!user">
           <li class="nav-item">
             <a class="nav-link" routerLinkActive="active" routerLink="/login">Login</a>
@@ -27,10 +28,10 @@
         </ng-container>
         <ng-container *ngIf="user">
           <li class="nav-item" *ngIf="user.isAdmin">
-            <a class="nav-link" (click)="logout()">Admin</a>
+            <a class="nav-link" routerLink="/product/add">Add product</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" (click)="logout()">Account</a>
+            <a class="nav-link" href="#">Account</a>
           </li>
 
           <li class="nav-item">
