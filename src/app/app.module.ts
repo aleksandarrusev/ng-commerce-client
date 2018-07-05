@@ -6,7 +6,7 @@ import {CartService} from './services/cart.service';
 import {FormsModule} from '@angular/forms';
 import {ProductsService} from './services/products.service';
 import { AuthService} from './services/auth.service';
-import {AuthGuardService} from './services/auth-guard.service';
+import {AuthGuardService} from './auth/auth-guard.service';
 import {ShoppingModule} from './shopping/shopping.module';
 import {CoreModule} from './core/core.module';
 import {AuthModule} from './auth/auth.module';
@@ -16,6 +16,11 @@ import {OrderService} from './services/order.service';
 import {JwtHelperService, JwtModule} from '@auth0/angular-jwt';
 import {CartValidatedGuardService} from './shopping/cart-validated.guard.service';
 import {TokenInterceptorService} from './auth/token-interceptor.service';
+import {AppRoutingModule} from './app.routing.module';
+import {GuestGuardService} from './auth/guest-guard.service';
+import {AdminGuardService} from './auth/admin-guard.service';
+import {ProductCardComponent} from './shopping/product/product-card/product-card.component';
+import {SharedModule} from './shared/shared.module';
 
 export function tokenGetter() {
   return localStorage.getItem('token');
@@ -24,7 +29,6 @@ export function tokenGetter() {
 @NgModule({
   declarations: [
     AppComponent,
-    // FooterComponent,
   ],
   imports: [
     BrowserModule,
@@ -35,6 +39,7 @@ export function tokenGetter() {
     ShoppingModule,
     AuthModule,
     HttpClientModule,
+    AppRoutingModule,
     JwtModule.forRoot({
       config: {
         tokenGetter: tokenGetter,
@@ -50,6 +55,8 @@ export function tokenGetter() {
     AuthGuardService,
     OrderService,
     JwtHelperService,
+    GuestGuardService,
+    AdminGuardService,
     CartValidatedGuardService,
     {
       provide: HTTP_INTERCEPTORS,

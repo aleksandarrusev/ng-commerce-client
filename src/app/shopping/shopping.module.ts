@@ -6,21 +6,22 @@ import {FormsModule} from '@angular/forms';
 import {ProductCardComponent} from './product/product-card/product-card.component';
 import {CreateProductComponent} from './product/create-product/create-product.component';
 import { SingleProductComponent } from './product/single-product/single-product.component';
-import {CoreRoutingModule} from '../core/core-routing.module';
+// import {CoreRoutingModule} from '../core/core-routing.module';
 import {CheckoutComponent} from './checkout/checkout.component';
 import { OrderCompletedComponent } from './order-completed/order-completed.component';
-
+import {ShoppingRoutingModule} from './shopping.routing.module';
+import {SharedModule} from '../shared/shared.module';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
-    CoreRoutingModule,
+    ShoppingRoutingModule,
+    SharedModule,
   ],
   declarations: [
     CategoryComponent,
     CartComponent,
-    ProductCardComponent,
     CreateProductComponent,
     SingleProductComponent,
     CheckoutComponent,
