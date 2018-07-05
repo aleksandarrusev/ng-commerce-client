@@ -1,4 +1,19 @@
-# ShoppingCart
+# ng-commerce
+
+Client for my ng-commerce online store app. 
+It is stil under development, but the core functionality is available. 
+The next improvements will be: 
+
+* improving to the admin panel and adding a user panel
+* realtime order tracking
+* adding payment with PayPal using its SDK
+* adding more interactivity to the UI
+* improve the responsive versions
+* replacing the template driven forms to reactive forms
+
+
+#Demo
+
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 6.0.5.
 
