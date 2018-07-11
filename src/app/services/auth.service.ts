@@ -1,11 +1,12 @@
 import {Injectable} from '@angular/core';
 import {BehaviorSubject, Observable, Subject} from 'rxjs';
-import {Router} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {JwtHelperService} from '@auth0/angular-jwt';
 import {IUser} from '../auth/user.model';
 import {environment} from '../../environments/environment';
 import {httpOptions} from '../shared/httpOptions';
+import {User} from 'firebase';
 
 @Injectable({
   providedIn: 'root'
@@ -19,40 +20,20 @@ export class AuthService {
               private jwtService: JwtHelperService) {
   }
 
-  register(name: String, email: String, password: String): void {
+  register(name: String, email: String, password: String): Observable<any> {
     const userInput = {
       name,
       email,
       password,
     };
 
-    this.http.post(`${environment.api}/users`, userInput, httpOptions).subscribe(
-      (response: { token: String, user: IUser }) => {
-        const {user, token} = response;
-        this.setToken(token);
-        this.authStatus.next(user);
-        this.router.navigate(['/']);
-      },
-      (error) => {
-        console.log(error);
-      }
-    );
+    return this.http.post(`${environment.api}/users`, userInput, httpOptions);
   }
 
-  login(email: String, password: String): void {
+  login(email: String, password: String): Observable<any> {
     const userCredentials = {email, password};
 
-    this.http.post(`${environment.api}/auth`, userCredentials).subscribe(
-      (response: { token: String, user: IUser }) => {
-        const {user, token} = response;
-        this.setToken(token);
-        this.authStatus.next(user);
-        this.router.navigate(['/']);
-      },
-      (error) => {
-        console.log(error);
-      }
-    );
+    return this.http.post(`${environment.api}/auth`, userCredentials);
   }
 
   logout() {
