@@ -71,14 +71,8 @@ export class CartService {
   validateCart() {
     const cartObj = {products: []};
     cartObj.products = this.getAllCartItemsRaw();
-    this.http.post<{ total: number }>(`${environment.api}/checkout`, cartObj, httpOptions).subscribe((result) => {
-      if (result.total > 0) {
-        this.cartValidated.next(result.total);
-        this.router.navigate(['/checkout']);
-      }
-    }, (error) => {
-      this.toastrService.error(error);
-    });
+    console.log(cartObj.products);
+    return this.http.post<{ total: number }>(`${environment.api}/checkout`, cartObj, httpOptions);
   }
 
   public getAllCartItemsRaw() {
