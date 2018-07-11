@@ -1,10 +1,13 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, HostListener, OnDestroy, OnInit} from '@angular/core';
 import {Observable, Subject, Subscription} from 'rxjs';
 import {AuthService} from '../../services/auth.service';
 import {CartService} from '../../services/cart.service';
 import {ProductsService} from '../../services/products.service';
 import {ICategory} from '../../shopping/category.model';
 import {IUser} from '../../auth/user.model';
+import {Product} from '../../shopping/product/product.model';
+import {FormControl} from '@angular/forms';
+import {flatMap, switchMap} from 'rxjs/operators';
 
 @Component({
   selector: 'app-header',
@@ -14,13 +17,22 @@ import {IUser} from '../../auth/user.model';
 export class HeaderComponent implements OnInit {
 
   categories$: Observable<ICategory[]>;
+  autocompleteResults: Product[];
   cartItemsCount: number;
+  queryField: FormControl = new FormControl();
   user: IUser;
-  show = false;
+  showMenu = false;
+  showAutocomplete = false;
+  @HostListener('document:click', ['$event'])
+
+  documentClick(event: MouseEvent) {
+    this.showAutocomplete = false;
+  }
 
   toggleCollapse() {
-    this.show = !this.show
+    this.showMenu = !this.showMenu;
   }
+
 
   constructor(private authService: AuthService, private cartService: CartService, private productService: ProductsService) {
   }
@@ -41,7 +53,24 @@ export class HeaderComponent implements OnInit {
     this.cartService.cartChanged.subscribe((cartStatus) => {
       this.cartItemsCount = cartStatus.count;
     });
+
     this.categories$ = this.productService.fetchAllCategories();
+
+    this.queryField.valueChanges.pipe(switchMap((value) => {
+          return this.productService.fetchProductsForAutocomplete(value);
+      }
+    )).subscribe((result) => {
+      if (result && result.length >= 1) {
+        this.showAutocomplete = true;
+        this.autocompleteResults = result;
+      } else {
+        this.showAutocomplete = false;
+      }
+    });
+  }
+
+  emptySearchInput() {
+    this.queryField.setValue('');
   }
 
 }

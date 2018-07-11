@@ -14,7 +14,7 @@ export class ProductsService {
   }
 
   fetchLatestProducts() {
-    return this.http.get<IProduct[]>(`${environment.api}/products/`);
+    return this.http.get<IProduct[]>(`${environment.api}/products/latest`);
   }
 
   fetchProductsByCategoryName(categoryName: string, parameters: {} | null = null) {
@@ -34,14 +34,17 @@ export class ProductsService {
 
 
   createProduct(product) {
-
-
     return this.http.post<Product>(`${environment.api}/products/`, product, httpOptions);
   }
 
 
   fetchAllCategories() {
     return this.http.get<ICategory[]>(`${environment.api}/categories`);
+  }
+
+
+  fetchProductsForAutocomplete(value): Observable<any> | null {
+    return this.http.get(`${environment.api}/products`, {params: {q: value}});
   }
 
   // isCategoryValid(categoryName) {

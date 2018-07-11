@@ -34,7 +34,6 @@ export class CategoryComponent implements OnInit, OnDestroy {
 
     this.routerSubscription = routerObservables$.subscribe(allParams => {
       const qParams = allParams.qparams;
-      console.log(qParams);
       this.category = allParams.params['category-name'];
       this.productService.fetchProductsByCategoryName(this.category, qParams).subscribe((products) => {
         this.products = products;
