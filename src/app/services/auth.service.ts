@@ -31,7 +31,11 @@ export class AuthService {
     };
 
     return this.http.post(`${environment.api}/users`, userInput, httpOptions).pipe(
-      tap((user) => this.authStateSubject.next(user))
+      tap((response: { token: String, user: IUser }) => {
+        const {user, token} = response;
+        this.setToken(token);
+        this.authStateSubject.next(user);
+      })
     );
   }
 
@@ -39,7 +43,11 @@ export class AuthService {
     const userCredentials = {email, password};
 
     return this.http.post(`${environment.api}/auth`, userCredentials).pipe(
-      tap((user) => this.authStateSubject.next(user))
+      tap((response: { token: String, user: IUser }) => {
+        const {user, token} = response;
+        this.setToken(token);
+        this.authStateSubject.next(user);
+      })
     );
   }
 
