@@ -7,7 +7,8 @@ import {ICategory} from '../../shopping/category.model';
 import {IUser} from '../../auth/user.model';
 import {Product} from '../../shopping/product/product.model';
 import {FormControl} from '@angular/forms';
-import {flatMap, switchMap} from 'rxjs/operators';
+import {switchMap, throttleTime} from 'rxjs/operators';
+import {debounceTime} from 'rxjs/internal/operators';
 
 @Component({
   selector: 'app-header',
@@ -18,11 +19,12 @@ export class HeaderComponent implements OnInit {
 
   categories$: Observable<ICategory[]>;
   autocompleteResults: Product[];
-  cartItemsCount: number;
+  cartState$: Observable<any>;
   queryField: FormControl = new FormControl();
   user: IUser;
   showMenu = false;
   showAutocomplete = false;
+
   @HostListener('document:click', ['$event'])
 
   documentClick(event: MouseEvent) {
@@ -42,7 +44,7 @@ export class HeaderComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.authService.authStatus.subscribe((user) => {
+    this.authService.authState$.subscribe((user) => {
       if (user) {
         this.user = user;
         return;
@@ -50,16 +52,14 @@ export class HeaderComponent implements OnInit {
       this.user = null;
     });
 
-    this.cartService.cartChanged.subscribe((cartStatus) => {
-      this.cartItemsCount = cartStatus.count;
-    });
+    this.cartState$ = this.cartService.cartState$;
 
     this.categories$ = this.productService.fetchAllCategories();
 
     this.queryField.valueChanges.pipe(switchMap((value) => {
-          return this.productService.fetchProductsForAutocomplete(value);
+        return this.productService.fetchProductsForAutocomplete(value);
       }
-    )).subscribe((result) => {
+    ), debounceTime(600)).subscribe((result) => {
       if (result && result.length >= 1) {
         this.showAutocomplete = true;
         this.autocompleteResults = result;

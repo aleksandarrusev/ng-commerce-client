@@ -24,7 +24,6 @@ export class LoginComponent implements OnInit {
       (response: { token: String, user: IUser }) => {
         const {user, token} = response;
         this.authService.setToken(token);
-        this.authService.authStatus.next(user);
         this.router.navigateByUrl(this.returnUrl);
       },
       (error) => {

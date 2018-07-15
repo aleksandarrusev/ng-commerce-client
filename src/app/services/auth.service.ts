@@ -7,18 +7,21 @@ import {IUser} from '../auth/user.model';
 import {environment} from '../../environments/environment';
 import {httpOptions} from '../shared/httpOptions';
 import {User} from 'firebase';
+import {tap} from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
-  public authStatus: BehaviorSubject<IUser | null> = new BehaviorSubject<IUser | null>(this.getTokenData());
+  private authStateSubject: BehaviorSubject<IUser | null> = new BehaviorSubject<IUser | null>(this.getTokenData());
 
   constructor(private router: Router,
               private http: HttpClient,
               private jwtService: JwtHelperService) {
   }
+
+  public authState$: Observable<IUser | null> = this.authStateSubject.asObservable();
 
   register(name: String, email: String, password: String): Observable<any> {
     const userInput = {
@@ -27,19 +30,23 @@ export class AuthService {
       password,
     };
 
-    return this.http.post(`${environment.api}/users`, userInput, httpOptions);
+    return this.http.post(`${environment.api}/users`, userInput, httpOptions).pipe(
+      tap((user) => this.authStateSubject.next(user))
+    );
   }
 
   login(email: String, password: String): Observable<any> {
     const userCredentials = {email, password};
 
-    return this.http.post(`${environment.api}/auth`, userCredentials);
+    return this.http.post(`${environment.api}/auth`, userCredentials).pipe(
+      tap((user) => this.authStateSubject.next(user))
+    );
   }
 
   logout() {
     localStorage.removeItem('token');
     this.router.navigate(['/login']);
-    this.authStatus.next(null);
+    this.authStateSubject.next(null);
   }
 
   public setToken(token) {
@@ -63,7 +70,7 @@ export class AuthService {
 
   public getUser(): IUser {
     let user;
-    this.authStatus.subscribe((userData) => {
+    this.authStateSubject.subscribe((userData) => {
       user = userData;
     });
     return user;
@@ -71,7 +78,7 @@ export class AuthService {
 
   public isLoggedIn(): boolean {
     let isLoggedIn = false;
-    this.authStatus.subscribe((user) => {
+    this.authStateSubject.subscribe((user) => {
       if (user) {
         isLoggedIn = true;
       }

@@ -24,7 +24,7 @@ export class CartComponent implements OnInit {
 
   ngOnInit() {
     this.cart = this.cartService.getAllCartItems();
-    this.cartService.cartChanged.subscribe((status) => {
+    this.cartService.cartState$.subscribe((status) => {
       this.cartStatus = status;
     });
   }
@@ -39,9 +39,7 @@ export class CartComponent implements OnInit {
   }
   validateCart() {
     this.cartService.validateCart().subscribe((result) => {
-      console.log(result);
       if (result.total > 0) {
-        this.cartService.cartValidated.next(result.total);
         this.router.navigate(['/checkout']);
       }
     }, (error) => {

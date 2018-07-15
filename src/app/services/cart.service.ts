@@ -8,13 +8,16 @@ import {Router} from '@angular/router';
 import {environment} from '../../environments/environment';
 import {ToastrService} from 'ngx-toastr';
 import {httpOptions} from '../shared/httpOptions';
+import {tap} from 'rxjs/operators';
 
 @Injectable()
 export class CartService {
   private cart: CartItem[] = [];
-  cartValidated: BehaviorSubject<number | null> = new BehaviorSubject<number | null>(null);
-  cartChanged: BehaviorSubject<any> = new BehaviorSubject<any>(0);
+  private cartStateSubject: BehaviorSubject<any> = new BehaviorSubject<any>(0);
+  private cartValidatedSubject: BehaviorSubject<number | null> = new BehaviorSubject<number | null>(null);
 
+  public cartState$ = this.cartStateSubject.asObservable();
+  public cartValidated$ = this.cartValidatedSubject.asObservable();
   constructor(private http: HttpClient, private router: Router, private toastrService: ToastrService) {
   }
 
@@ -29,7 +32,7 @@ export class CartService {
       this.cart.push(new CartItem(product, 1));
     }
     this.toastrService.success('You successfully added a product to your cart!');
-    this.cartChanged.next(this.getCartItemsCount());
+    this.cartStateSubject.next(this.getCartItemsCount());
   }
 
   getAllCartItems() {
@@ -53,26 +56,29 @@ export class CartService {
 
   incrementItemQty(cartItem: CartItem) {
     cartItem.qty++;
-    this.cartChanged.next(this.getCartItemsCount());
+    this.cartStateSubject.next(this.getCartItemsCount());
   }
 
   decrementItemQty(cartItem: CartItem) {
     cartItem.qty--;
-    this.cartChanged.next(this.getCartItemsCount());
+    this.cartStateSubject.next(this.getCartItemsCount());
 
   }
 
   removeItem(cartItem: CartItem) {
     const index = this.cart.indexOf(cartItem);
     this.cart.splice(index, 1);
-    this.cartChanged.next(this.getCartItemsCount());
+    this.cartStateSubject.next(this.getCartItemsCount());
   }
 
   validateCart() {
     const cartObj = {products: []};
     cartObj.products = this.getAllCartItemsRaw();
-    console.log(cartObj.products);
-    return this.http.post<{ total: number }>(`${environment.api}/checkout`, cartObj, httpOptions);
+    return this.http.post<{ total: number }>(`${environment.api}/checkout`, cartObj, httpOptions).pipe(
+      tap((result) => {
+        this.cartValidatedSubject.next(result.total);
+      })
+    );
   }
 
   public getAllCartItemsRaw() {
@@ -86,7 +92,7 @@ export class CartService {
   }
   public emptyCart() {
     this.cart = [];
-    this.cartChanged.next(this.getCartItemsCount());
+    this.cartStateSubject.next(this.getCartItemsCount());
   }
 
 }

@@ -11,9 +11,10 @@ export class GuestGuardService implements CanActivate {
   }
 
   canActivate(route: ActivatedRouteSnapshot): Observable<boolean> {
-    return this.authService.authStatus.pipe
+    return this.authService.authState$.pipe
     (map(((user) => {
       if (user) {
+        this.router.navigate(['/']);
         return false;
       }
       return true;

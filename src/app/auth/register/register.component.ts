@@ -20,7 +20,6 @@ export class RegisterComponent implements OnInit {
       (response: { token: String, user: IUser }) => {
         const {user, token} = response;
         this.authService.setToken(token);
-        this.authService.authStatus.next(user);
         this.router.navigate(['/']);
       },
       (error) => {

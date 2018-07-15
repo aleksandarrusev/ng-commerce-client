@@ -8,13 +8,13 @@ import {CartService} from '../../services/cart.service';
   styleUrls: ['./checkout.component.css']
 })
 export class CheckoutComponent implements OnInit {
-  total: number;
 
+  total$;
   constructor(private orderService: OrderService, private cartService: CartService) {
   }
 
   ngOnInit() {
-    this.total = this.cartService.cartValidated.getValue();
+    this.total$ = this.cartService.cartValidated$;
   }
 
   onSubmit(form) {
