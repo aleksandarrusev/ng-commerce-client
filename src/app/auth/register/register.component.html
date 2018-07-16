@@ -12,7 +12,6 @@
           <div class="form-group">
             <input type="text" placeholder="Your name..." formControlName="name" class="form-control"
                    [ngClass]="{'is-invalid': registerForm.get('name').errors && registerForm.get('name').touched}">
-
             <div class="invalid-feedback">
               <ul class="errors-list">
                 <li *ngIf="registerForm.get('name').hasError('required') && registerForm.get('name').touched">
