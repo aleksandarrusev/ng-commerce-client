@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
-import {AuthService} from './services/auth.service';
-import {ProductsService} from './services/products.service';
-import {ICategory} from './shopping/category.model';
+import {AuthService} from './auth/services/auth.service';
+import {ProductsService} from './products/services/products.service';
+import {ICategory} from './products/models/category.model';
 import {routerFadeAnimation} from './shared/animations';
 
 @Component({

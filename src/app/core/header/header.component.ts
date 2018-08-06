@@ -1,11 +1,11 @@
 import {Component, HostListener, OnDestroy, OnInit} from '@angular/core';
 import {Observable, Subject, Subscription} from 'rxjs';
-import {AuthService} from '../../services/auth.service';
-import {CartService} from '../../services/cart.service';
-import {ProductsService} from '../../services/products.service';
-import {ICategory} from '../../shopping/category.model';
+import {AuthService} from '../../auth/services/auth.service';
+import {CartService} from '../../cart/services/cart.service';
+import {ProductsService} from '../../products/services/products.service';
+import {ICategory} from '../../products/models/category.model';
 import {IUser} from '../../auth/models/user.model';
-import {Product} from '../../shopping/product/product.model';
+import {Product} from '../../products/models/product.model';
 import {FormControl} from '@angular/forms';
 import {switchMap, throttleTime} from 'rxjs/operators';
 import {debounceTime} from 'rxjs/internal/operators';
