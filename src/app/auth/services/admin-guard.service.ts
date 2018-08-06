@@ -11,7 +11,7 @@ import {IUser} from '../models/user.model';
 @Injectable()
 export class AdminGuardService implements CanActivate {
 
-    constructor(public authService: AuthService, public router: Router, public store: Store<AuthState>) {
+    constructor(private router: Router, private store: Store<AuthState>) {
     }
 
     canActivate(route: ActivatedRouteSnapshot): Observable<boolean> {
