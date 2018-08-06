@@ -11,6 +11,11 @@ import {CheckoutComponent} from './checkout/checkout.component';
 import { OrderCompletedComponent } from './order-completed/order-completed.component';
 import {ShoppingRoutingModule} from './shopping.routing.module';
 import {SharedModule} from '../shared/shared.module';
+import {StoreModule} from '@ngrx/store';
+import {AuthEffects} from '../auth/store/auth.effects';
+import * as fromShopping from './store/shopping.reducer';
+import {EffectsModule} from '@ngrx/effects';
+import {ShoppingEffects} from './store/shopping.effects';
 
 @NgModule({
   imports: [
@@ -19,6 +24,9 @@ import {SharedModule} from '../shared/shared.module';
     ShoppingRoutingModule,
     ReactiveFormsModule,
     SharedModule,
+      StoreModule.forFeature('shopping', fromShopping.shoppingReducer),
+      EffectsModule.forFeature([ShoppingEffects])
+
   ],
   declarations: [
     CategoryComponent,

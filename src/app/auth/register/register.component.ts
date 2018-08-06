@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {AuthService} from '../../services/auth.service';
-import {IUser} from '../user.model';
+import {IUser} from '../models/user.model';
 import {ActivatedRoute, Router} from '@angular/router';
 import {ToastrService} from 'ngx-toastr';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
