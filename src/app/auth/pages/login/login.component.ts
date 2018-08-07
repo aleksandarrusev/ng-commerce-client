@@ -6,7 +6,7 @@ import {FormBuilder, FormGroup, Validators, ValidationErrors} from '@angular/for
 import {ToastrService} from 'ngx-toastr';
 import {Store} from '@ngrx/store';
 import {AuthState} from '../../store/auth.reducer';
-import {Login} from '../../store/auth.actions';
+import {LoginAction} from '../../store/auth.actions';
 
 @Component({
   selector: 'app-login',
@@ -45,11 +45,11 @@ export class LoginComponent implements OnInit {
       userCredentials: {email, password},
         returnUrl: this.returnUrl,
     }
-    this.store.dispatch(new Login(loginRequest));
+    this.store.dispatch(new LoginAction(loginRequest));
 
     // this.authService.login(email, password).subscribe(
     //   () => {
-    //     this.toastrService.success('Login succesfull.')
+    //     this.toastrService.success('LoginAction succesfull.')
     //     this.router.navigateByUrl(this.returnUrl);
     //   },
     //   (error) => {

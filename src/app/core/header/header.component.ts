@@ -11,7 +11,7 @@ import {switchMap, throttleTime} from 'rxjs/operators';
 import {debounceTime} from 'rxjs/internal/operators';
 import {select, Store} from '@ngrx/store';
 import {AuthState} from '../../auth/store/auth.reducer';
-import {Logout} from '../../auth/store/auth.actions';
+import {LogoutAction} from '../../auth/store/auth.actions';
 import {getUser} from '../../auth/store/auth.selectors';
 
 @Component({
@@ -47,7 +47,7 @@ export class HeaderComponent implements OnInit {
     }
 
     logout() {
-        this.store.dispatch(new Logout());
+        this.store.dispatch(new LogoutAction());
     }
 
     ngOnInit() {

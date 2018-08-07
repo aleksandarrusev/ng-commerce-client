@@ -53,7 +53,7 @@ export class AuthService {
                     const {user, token} = response;
                     this.setToken(token);
 
-                    this.toastrService.success('Login succesfull.');
+                    this.toastrService.success('LoginAction succesfull.');
                     this.router.navigateByUrl(loginRequest.returnUrl);
 
                 })

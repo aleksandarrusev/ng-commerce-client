@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {Actions, Effect, ofType} from '@ngrx/effects';
 import {AuthService} from '../services/auth.service';
-import {AuthActionTypes, Login, LoginFailed, LoginSuccess, Logout, SetUser} from './auth.actions';
+import {AuthActionTypes, LoginAction, LoginFailedAction, LoginSuccessAction, LogoutAction, SetUserAction} from './auth.actions';
 import {catchError, map, mergeMap, tap} from 'rxjs/operators';
 import {IUser} from '../models/user.model';
 import {defer, Observable, of} from 'rxjs';
@@ -9,32 +9,32 @@ import {defer, Observable, of} from 'rxjs';
 
 @Injectable()
 export class AuthEffects {
-    get init$(): Observable<SetUser> {
+    get init$(): Observable<SetUserAction> {
         return this._init$;
     }
 
-    set init$(value: Observable<SetUser>) {
+    set init$(value: Observable<SetUserAction>) {
         this._init$ = value;
     }
 
     @Effect()
     login$ = this.actions$.pipe(
-        ofType<Login>(AuthActionTypes.Login),
+        ofType<LoginAction>(AuthActionTypes.Login),
         mergeMap((action) => {
             return this.authService.login(action.payload).pipe(
                 catchError((error) => {
-                   return of(new LoginFailed());
+                   return of(new LoginFailedAction());
                 }),
             );
         }),
         map((response: { token: String, user: IUser}) => {
-            return new LoginSuccess(response.user);
+            return new LoginSuccessAction(response.user);
         })
     );
     //
     @Effect({dispatch: false})
     logout$ = this.actions$.pipe(
-        ofType<Logout>(AuthActionTypes.Logout),
+        ofType<LogoutAction>(AuthActionTypes.Logout),
         tap(() => {
             return this.authService.logout();
         })
@@ -43,9 +43,9 @@ export class AuthEffects {
         const user = this.authService.getTokenData();
 
         if (user) {
-            return of(new SetUser(user));
+            return of(new SetUserAction(user));
         } else {
-            return of(new Logout());
+            return of(new LogoutAction());
         }
 
     });
