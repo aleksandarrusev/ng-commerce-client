@@ -9,6 +9,11 @@ export const getLatestProducts = createSelector(
   products => products.latestProducts
 );
 
+export const getProductsByCategory = createSelector(
+    selectProductsState,
+    products => products.displayedProducts
+);
+
 //
 // export const isLoggedOut = createSelector(
 //     getLatestProducts,

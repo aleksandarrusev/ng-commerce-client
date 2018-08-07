@@ -14,7 +14,7 @@ export enum ProductsActionTypes {
 
 export class FetchProductsByCategoryAction implements Action {
   readonly type = ProductsActionTypes.FetchProductsByCategory;
-  constructor() {}
+  constructor(public payload: {category: string, qParams: any}) {}
 }
 
 export class FilterProductsAction implements Action {
@@ -50,7 +50,7 @@ export class FilteredProductsFetchedSuccessAction implements Action {
 }
 
 export class SingleProductFetchedSuccessAction implements Action {
-    readonly type = ProductsActionTypes.FilteredProductsFetchedSuccess;
+    readonly type = ProductsActionTypes.SingleProductFetchedSuccess;
     constructor(public payload: IProduct[]) {}
 }
 
