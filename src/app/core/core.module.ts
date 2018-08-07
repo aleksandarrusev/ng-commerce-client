@@ -7,13 +7,19 @@ import {NotFoundComponent} from './not-found/not-found.component';
 import {SharedModule} from '../shared/shared.module';
 import {ReactiveFormsModule} from '@angular/forms';
 import {RouterModule} from '@angular/router';
+import {StoreModule} from '@ngrx/store';
+import * as fromProducts from '../products/store/products.reducer';
+import {EffectsModule} from '@ngrx/effects';
+import {ProductsEffects} from '../products/store/products.effects';
 
 @NgModule({
     imports: [
         CommonModule,
         SharedModule,
         ReactiveFormsModule,
-        RouterModule
+        RouterModule,
+        StoreModule.forFeature('products', fromProducts.productsReducer),
+        EffectsModule.forFeature([ProductsEffects])
     ],
     declarations: [
         HeaderComponent,
