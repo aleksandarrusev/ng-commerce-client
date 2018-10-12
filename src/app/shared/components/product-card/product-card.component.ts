@@ -3,6 +3,9 @@ import {IProduct, Product} from '../../../products/models/product.model';
 import {BehaviorSubject, Observable, Subject} from 'rxjs';
 import {CartService} from '../../../cart/services/cart.service';
 import {ToastrService} from 'ngx-toastr';
+import {Store} from '@ngrx/store';
+import {IAuthState} from '../../../auth/store/auth.reducer';
+import {AddToCartAction} from '../../../cart/store/cart.actions';
 
 @Component({
   selector: 'app-product-card',
@@ -12,11 +15,14 @@ import {ToastrService} from 'ngx-toastr';
 export class ProductCardComponent implements OnInit {
   @Input() product: Product;
 
-  constructor(private cartService: CartService) {
+  constructor(
+      private cartService: CartService,
+      private store: Store<IAuthState>,
+  ) {
   }
 
   addToCart(product: IProduct): void {
-    this.cartService.add(product);
+    this.cartService.addToCartOrIncrementQty(product);
   }
 
   ngOnInit() {

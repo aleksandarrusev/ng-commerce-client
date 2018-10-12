@@ -8,15 +8,15 @@ import {
 import {AuthActions, AuthActionTypes} from './auth.actions';
 import {IUser} from '../models/user.model';
 
-export interface AuthState {
+export interface IAuthState {
   user: IUser | null;
 }
-export const initialAuthState: AuthState = {
+export const initialAuthState: IAuthState = {
     user: null,
 };
 
 export function authReducer(state = initialAuthState,
-                            action: AuthActions): AuthState {
+                            action: AuthActions): IAuthState {
     switch (action.type) {
 
         case AuthActionTypes.LoginSuccess:

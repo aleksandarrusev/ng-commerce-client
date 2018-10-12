@@ -5,6 +5,10 @@ import {combineLatest, Subscription} from 'rxjs';
 import {CartItem} from '../../../cart/models/cart-item.model';
 import {IProduct} from '../../models/product.model';
 import {CartService} from '../../../cart/services/cart.service';
+import {Store} from '@ngrx/store';
+import {IProductsState} from '../../store/products.reducer';
+import {FetchProductsByCategoryAction} from '../../store/products.actions';
+import {getProductsByCategory} from '../../store/products.selectors';
 
 @Component({
   selector: 'app-category',
@@ -20,12 +24,12 @@ export class CategoryComponent implements OnInit, OnDestroy {
   constructor(
     private cartService: CartService,
     private productService: ProductsService,
+    private store: Store<IProductsState>,
     private routerService: Router,
     private route: ActivatedRoute) {
   }
 
   ngOnInit() {
-    this.cart = this.cartService.getAllCartItems();
 
     const routerObservables$ = combineLatest(this.route.params, this.route.queryParams, (params, qparams) => ({
       params,
@@ -35,9 +39,11 @@ export class CategoryComponent implements OnInit, OnDestroy {
     this.routerSubscription = routerObservables$.subscribe(allParams => {
       const qParams = allParams.qparams;
       this.category = allParams.params['category-name'];
-      this.productService.fetchProductsByCategoryName(this.category, qParams).subscribe((products) => {
-        this.products = products;
-      });
+      this.store.dispatch(new FetchProductsByCategoryAction({category: this.category, qParams}));
+    });
+
+    this.store.select(getProductsByCategory).subscribe((products) => {
+      this.products = products;
     });
   }
 
@@ -48,9 +54,6 @@ export class CategoryComponent implements OnInit, OnDestroy {
   resetFilter() {
     this.routerService.navigate(['/category/' + this.category], );
     this.priceRange = 200;
-  }
-  showRange() {
-    console.log(this.priceRange);
   }
 
   ngOnDestroy(): void {

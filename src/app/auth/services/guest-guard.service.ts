@@ -3,13 +3,13 @@ import {ActivatedRouteSnapshot, CanActivate, Router} from '@angular/router';
 import {Observable} from 'rxjs';
 import {map, first} from 'rxjs/operators';
 import {select, Store} from '@ngrx/store';
-import {AuthState} from '../store/auth.reducer';
+import {IAuthState} from '../store/auth.reducer';
 import {getUser} from '../store/auth.selectors';
 
 @Injectable()
 export class GuestGuardService implements CanActivate {
 
-    constructor(private router: Router, private store: Store<AuthState>) {
+    constructor(private router: Router, private store: Store<IAuthState>) {
     }
 
     canActivate(route: ActivatedRouteSnapshot): Observable<boolean> {

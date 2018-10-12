@@ -7,7 +7,7 @@ export enum AuthActionTypes {
   SetUser = '[Auth] Set logged in user if token is available',
   LoginSuccess = '[Auth] LoginAction successful',
   LoginFailed = '[Auth] LoginAction failed',
-  Logout = '[Auth] Load Auths'
+  Logout = '[Auth] Logout'
 }
 
 export class LoginAction implements Action {
@@ -32,8 +32,9 @@ export class LoginSuccessAction implements Action {
 export class LoginFailedAction implements Action {
     readonly type = AuthActionTypes.LoginFailed;
 }
+
 export class LogoutAction implements Action {
     readonly type = AuthActionTypes.Logout;
 }
 
-export type AuthActions = LoginAction | LoginSuccessAction | LoginFailedAction |  LogoutAction | SetUserAction;
+export type AuthActions = LoginAction | LoginSuccessAction | LoginFailedAction |  LogoutAction | SetUserAction ;

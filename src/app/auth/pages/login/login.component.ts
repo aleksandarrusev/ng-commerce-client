@@ -5,7 +5,7 @@ import {ActivatedRoute, Router, UrlTree} from '@angular/router';
 import {FormBuilder, FormGroup, Validators, ValidationErrors} from '@angular/forms';
 import {ToastrService} from 'ngx-toastr';
 import {Store} from '@ngrx/store';
-import {AuthState} from '../../store/auth.reducer';
+import {IAuthState} from '../../store/auth.reducer';
 import {LoginAction} from '../../store/auth.actions';
 
 @Component({
@@ -22,7 +22,7 @@ export class LoginComponent implements OnInit {
               private activatedRoute: ActivatedRoute,
               private fb: FormBuilder,
               private toastrService: ToastrService,
-              private store: Store<AuthState>,
+              private store: Store<IAuthState>,
               private router: Router) {
   }
 

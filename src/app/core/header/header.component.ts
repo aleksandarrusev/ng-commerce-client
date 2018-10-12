@@ -10,9 +10,10 @@ import {FormControl} from '@angular/forms';
 import {switchMap, throttleTime} from 'rxjs/operators';
 import {debounceTime} from 'rxjs/internal/operators';
 import {select, Store} from '@ngrx/store';
-import {AuthState} from '../../auth/store/auth.reducer';
+import {IAuthState} from '../../auth/store/auth.reducer';
 import {LogoutAction} from '../../auth/store/auth.actions';
 import {getUser} from '../../auth/store/auth.selectors';
+import {getCartItems, getCartItemsCount} from '../../cart/store/cart.selectors';
 
 @Component({
     selector: 'app-header',
@@ -23,7 +24,7 @@ export class HeaderComponent implements OnInit {
 
     categories$: Observable<ICategory[]>;
     autocompleteResults: Product[];
-    cartState$: Observable<any>;
+    cartItemsCount: Observable<number>;
     queryField: FormControl = new FormControl();
     user: IUser = null;
     showMenu = false;
@@ -41,8 +42,7 @@ export class HeaderComponent implements OnInit {
 
 
     constructor(private authService: AuthService,
-                private cartService: CartService,
-                private store: Store<AuthState>,
+                private store: Store<IAuthState>,
                 private productService: ProductsService) {
     }
 
@@ -51,13 +51,14 @@ export class HeaderComponent implements OnInit {
     }
 
     ngOnInit() {
-        // this.authService.authState$.subscribe((user) => {
-        //     if (user) {
-        //         this.user = user;
-        //         return;
-        //     }
-        //     this.user = null;
-        // });
+        this.authService.authState$.subscribe((user) => {
+            if (user) {
+                this.user = user;
+                return;
+            }
+            this.user = null;
+        });
+
         this.store.pipe(
             select(getUser)
         ).subscribe((user) => {
@@ -68,7 +69,6 @@ export class HeaderComponent implements OnInit {
             }
         });
 
-        this.cartState$ = this.cartService.cartState$;
 
         this.categories$ = this.productService.fetchAllCategories();
 
@@ -83,6 +83,9 @@ export class HeaderComponent implements OnInit {
                 this.showAutocomplete = false;
             }
         });
+
+        this.cartItemsCount = this.store.select(getCartItemsCount);
+
     }
 
     emptySearchInput() {

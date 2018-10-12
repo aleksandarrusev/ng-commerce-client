@@ -27,7 +27,7 @@ export class SingleProductComponent implements OnInit, OnDestroy {
     });
   }
   addToCart(product) {
-    this.cartService.add(product);
+    this.cartService.addToCartOrIncrementQty(product)
   }
 
   ngOnDestroy() {
