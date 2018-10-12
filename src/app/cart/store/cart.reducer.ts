@@ -40,13 +40,14 @@ export function cartReducer(state = initialCartState,
 
             const updatedCartItemsArrayIncr = state.cartItems.map((item) => {
                 if (item === cartItemToIncrement) {
-                   item.qty += 1;
+                    item.qty += 1;
                 }
                 return item;
             });
 
             return {
                 ...state,
+                cartTotal: state.cartTotal + cartItemToIncrement.product.price,
                 cartItemsCount: state.cartItemsCount + 1,
                 cartItems: [
                     ...updatedCartItemsArrayIncr
@@ -65,11 +66,13 @@ export function cartReducer(state = initialCartState,
 
             return {
                 ...state,
+                cartTotal: state.cartTotal - cartItemToIncrement.product.price,
                 cartItemsCount: state.cartItemsCount - 1,
                 cartItems: [
                     ...updatedCartItemsDecr
                 ]
             };
+
 
         default:
             return state;

@@ -40,11 +40,11 @@ export class CartPage implements OnInit {
     }
 
     incrementQty(cartItem) {
-
+        this.cartService.incrementItemQty(cartItem);
     }
 
     decrementQty(cartItem) {
-        this.store.dispatch(new DecrementCartItemQtyAction(cartItem));
+        this.cartService.decrementItemQty(cartItem);
     }
 
     removeItem(cartItem) {
