@@ -40,7 +40,6 @@ export function cartReducer(state = initialCartState,
         case CartActionTypes.IncrementCartItemQty:
             const cartItemToIncrement = action.payload.cartItem;
             const cartItemToIncrementIndex = state.cartItems.indexOf(cartItemToIncrement);
-            ;
 
             return {
                 cartTotal: state.cartTotal + cartItemToIncrement.product.price,

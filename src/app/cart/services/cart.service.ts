@@ -8,7 +8,7 @@ import {Router} from '@angular/router';
 import {environment} from '../../../environments/environment';
 import {ToastrService} from 'ngx-toastr';
 import {httpOptions} from '../../shared/httpOptions';
-import {first, tap} from 'rxjs/operators';
+import {first, switchMap, tap} from 'rxjs/operators';
 import {Store} from '@ngrx/store';
 import {ICartState} from '../store/cart.reducer';
 import {
@@ -16,7 +16,7 @@ import {
     DecrementCartItemQtyAction,
     IncrementCartItemQtyAction, RemoveFromCartAction,
 } from '../store/cart.actions';
-import {getCartItems} from '../store/cart.selectors';
+import {getAllCartInfo, getCartItems} from '../store/cart.selectors';
 
 @Injectable()
 export class CartService {
@@ -37,10 +37,10 @@ export class CartService {
             const existingCartItem: ICartItem = cartItems.find((item: ICartItem) => item.product._id === product._id);
 
             if (existingCartItem) {
-                this.store.dispatch(new IncrementCartItemQtyAction({ cartItem: existingCartItem }));
+                this.store.dispatch(new IncrementCartItemQtyAction({cartItem: existingCartItem}));
             } else {
                 const newItem = new CartItem(product, 1);
-                this.store.dispatch(new AddToCartAction({ cartItem: newItem }));
+                this.store.dispatch(new AddToCartAction({cartItem: newItem}));
             }
             this.toastrService.success('You successfully added a product to your cart!');
         });
@@ -52,7 +52,7 @@ export class CartService {
         this.store.select(getCartItems).pipe(
             first(),
         ).subscribe((cartItems) => {
-            const  itemToBeIncremented: ICartItem = cartItems.find((item: ICartItem) => item.product._id === cartItem.product._id);
+            const itemToBeIncremented: ICartItem = cartItems.find((item: ICartItem) => item.product._id === cartItem.product._id);
             itemToBeIncremented.qty += 1;
 
             this.store.dispatch(new IncrementCartItemQtyAction({cartItem: itemToBeIncremented}));
@@ -63,7 +63,7 @@ export class CartService {
         this.store.select(getCartItems).pipe(
             first(),
         ).subscribe((cartItems) => {
-            const  itemToBeDecremented: ICartItem = cartItems.find((item: ICartItem) => item.product._id === cartItem.product._id);
+            const itemToBeDecremented: ICartItem = cartItems.find((item: ICartItem) => item.product._id === cartItem.product._id);
             itemToBeDecremented.qty -= 1;
 
             this.store.dispatch(new DecrementCartItemQtyAction({cartItem: itemToBeDecremented}));
@@ -75,11 +75,17 @@ export class CartService {
     }
 
     validateCart() {
-        const cartObj = {products: []};
-        // cartObj.products = this.getAllCartItemsRaw();
-        return this.http.post<{ total: number }>(`${environment.api}/checkout`, cartObj, httpOptions).pipe(
+        return this.store.select(getCartItems).pipe(
+            first(),
+            switchMap((cartItems) => {
+                const parsedCartItems = cartItems.map((item) => {
+                    return {id: item.product._id, qty: item.qty};
+                });
+                const cartObj = {products: parsedCartItems};
+                return this.http.post<{ total: number }>(`${environment.api}/checkout`, cartObj, httpOptions);
+            }),
             tap((result) => {
-                // this.cartValidatedSubject.next(result.total);
+                this.cartValidatedSubject.next(result.total);
             })
         );
     }
