@@ -24,6 +24,8 @@ import {AdminGuardService} from './auth/services/admin-guard.service';
 import {AuthGuardService} from './auth/services/auth-guard.service';
 import {GuestGuardService} from './auth/services/guest-guard.service';
 import {ProductsModule} from './products/products.module';
+import {CartValidatedGuardService} from './order/services/cart-validated.guard.service';
+import {OrderService} from './order/services/order.service';
 
 export function tokenGetter() {
     return localStorage.getItem('token');
@@ -71,7 +73,9 @@ export function tokenGetter() {
         },
         AuthGuardService,
         AdminGuardService,
-        GuestGuardService
+        OrderService,
+        GuestGuardService,
+        CartValidatedGuardService
 
     ],
     bootstrap: [AppComponent]

@@ -85,6 +85,7 @@ export class CartService {
                 return this.http.post<{ total: number }>(`${environment.api}/checkout`, cartObj, httpOptions);
             }),
             tap((result) => {
+                console.log(result);
                 this.cartValidatedSubject.next(result.total);
             })
         );
