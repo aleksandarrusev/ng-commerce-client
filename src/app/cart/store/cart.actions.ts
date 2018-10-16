@@ -17,36 +17,19 @@ export enum CartActionTypes {
 
 export class AddToCartAction implements Action {
   readonly type = CartActionTypes.AddToCart;
-  constructor(public payload: ICartItem[]) {}
+  constructor(public payload: {cartItem: ICartItem}) {}
 }
-//
 export class IncrementCartItemQtyAction implements Action {
     readonly type = CartActionTypes.IncrementCartItemQty;
-    constructor(public payload: ICartItem) {}
+    constructor(public payload: {cartItem: ICartItem}) {}
 }
 export class DecrementCartItemQtyAction implements Action {
     readonly type = CartActionTypes.DecrementCartItemQty;
-    constructor(public payload: ICartItem) {}
+    constructor(public payload: {cartItem: ICartItem}) {}
 }
 export class RemoveFromCartAction implements Action {
     readonly type = CartActionTypes.RemoveFromCart;
     constructor(public payload: {cartItem: CartItem}) {}
-}
-export class IncrementCartItemsCountAction implements Action {
-    readonly type = CartActionTypes.IncrementCartItemsCount;
-    constructor() {}
-}
-export class DecrementCartItemsCountAction implements Action {
-    readonly type = CartActionTypes.DecrementCartItemsCount;
-    constructor() {}
-}
-export class IncreaseTotalCostAction implements Action {
-    readonly type = CartActionTypes.IncreaseTotalCost;
-    constructor(public payload: number) {}
-}
-export class DecreaseTotalCostAction implements Action {
-    readonly type = CartActionTypes.DecreaseTotalCost;
-    constructor(public payload: number) {}
 }
 export class EmptyCartAction implements Action {
     readonly type = CartActionTypes.EmptyCart;
@@ -58,10 +41,6 @@ AddToCartAction |
 IncrementCartItemQtyAction |
 DecrementCartItemQtyAction |
 RemoveFromCartAction |
-IncrementCartItemsCountAction |
-DecrementCartItemsCountAction |
-IncreaseTotalCostAction |
-DecreaseTotalCostAction |
 EmptyCartAction
 ;
 

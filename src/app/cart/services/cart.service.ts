@@ -14,9 +14,7 @@ import {ICartState} from '../store/cart.reducer';
 import {
     AddToCartAction,
     DecrementCartItemQtyAction,
-    IncreaseTotalCostAction,
-    IncrementCartItemQtyAction,
-    IncrementCartItemsCountAction
+    IncrementCartItemQtyAction, RemoveFromCartAction,
 } from '../store/cart.actions';
 import {getCartItems} from '../store/cart.selectors';
 
@@ -36,17 +34,13 @@ export class CartService {
         this.store.select(getCartItems).pipe(
             first(),
         ).subscribe((cartItems) => {
-            const cartItemsCopy = [...cartItems];
-            const existingCartItem: ICartItem | null = cartItemsCopy.find((item: ICartItem) => item.product._id === product._id);
+            const existingCartItem: ICartItem = cartItems.find((item: ICartItem) => item.product._id === product._id);
 
             if (existingCartItem) {
-                this.store.dispatch(new IncrementCartItemQtyAction(existingCartItem));
-                this.store.dispatch(new IncreaseTotalCostAction(existingCartItem.product.price));
+                this.store.dispatch(new IncrementCartItemQtyAction({ cartItem: existingCartItem }));
             } else {
                 const newItem = new CartItem(product, 1);
-                cartItemsCopy.push(newItem);
-                this.store.dispatch(new AddToCartAction(cartItemsCopy));
-                this.store.dispatch(new IncreaseTotalCostAction(newItem.product.price));
+                this.store.dispatch(new AddToCartAction({ cartItem: newItem }));
             }
             this.toastrService.success('You successfully added a product to your cart!');
         });
@@ -55,17 +49,29 @@ export class CartService {
 
 
     incrementItemQty(cartItem: CartItem) {
-        this.store.dispatch(new IncrementCartItemQtyAction(cartItem));
+        this.store.select(getCartItems).pipe(
+            first(),
+        ).subscribe((cartItems) => {
+            const  itemToBeIncremented: ICartItem = cartItems.find((item: ICartItem) => item.product._id === cartItem.product._id);
+            itemToBeIncremented.qty += 1;
+
+            this.store.dispatch(new IncrementCartItemQtyAction({cartItem: itemToBeIncremented}));
+        });
     }
 
     decrementItemQty(cartItem: CartItem) {
-        this.store.dispatch(new DecrementCartItemQtyAction(cartItem));
+        this.store.select(getCartItems).pipe(
+            first(),
+        ).subscribe((cartItems) => {
+            const  itemToBeDecremented: ICartItem = cartItems.find((item: ICartItem) => item.product._id === cartItem.product._id);
+            itemToBeDecremented.qty -= 1;
+
+            this.store.dispatch(new DecrementCartItemQtyAction({cartItem: itemToBeDecremented}));
+        });
     }
 
     removeItem(cartItem: CartItem) {
-        // const index = this.cart.indexOf(cartItem);
-        // this.cart.splice(index, 1);
-        // this.cartStateSubject.next(this.getCartItemsCount());
+        this.store.dispatch(new RemoveFromCartAction({cartItem}));
     }
 
     validateCart() {
