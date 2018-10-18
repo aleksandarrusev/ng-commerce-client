@@ -37,6 +37,7 @@ export class CartService {
             const existingCartItem: ICartItem = cartItems.find((item: ICartItem) => item.product._id === product._id);
 
             if (existingCartItem) {
+              existingCartItem.qty += 1;
                 this.store.dispatch(new IncrementCartItemQtyAction({cartItem: existingCartItem}));
             } else {
                 const newItem = new CartItem(product, 1);
