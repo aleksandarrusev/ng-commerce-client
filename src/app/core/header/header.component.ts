@@ -13,7 +13,7 @@ import {select, Store} from '@ngrx/store';
 import {IAuthState} from '../../auth/store/auth.reducer';
 import {LogoutAction} from '../../auth/store/auth.actions';
 import {getUser} from '../../auth/store/auth.selectors';
-import {getCartItems, getCartItemsCount} from '../../cart/store/cart.selectors';
+import {getAllCartItems, getCartItemsCount} from '../../cart/store/cart.selectors';
 
 @Component({
     selector: 'app-header',

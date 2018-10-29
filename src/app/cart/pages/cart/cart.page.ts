@@ -4,10 +4,10 @@ import {CartItem, ICartItem} from '../../models/cart-item.model';
 import {Location} from '@angular/common';
 import {Router} from '@angular/router';
 import {ToastrService} from 'ngx-toastr';
-import {Store} from '@ngrx/store';
 import {ICartState} from '../../store/cart.reducer';
-import {getAllCartInfo, getCartItems} from '../../store/cart.selectors';
+import {getAllCartInfo, getAllCartItems} from '../../store/cart.selectors';
 import {DecrementCartItemQtyAction, IncrementCartItemQtyAction} from '../../store/cart.actions';
+import {Observable} from 'rxjs';
 
 @Component({
     selector: 'app-cart',
@@ -15,28 +15,22 @@ import {DecrementCartItemQtyAction, IncrementCartItemQtyAction} from '../../stor
     styleUrls: ['./cart.page.css']
 })
 export class CartPage implements OnInit {
-    cartStatus: {
-        count: number,
-        total: number,
-    };
 
-    cart: CartItem[];
+    cartTotal: Observable<number>;
+    cartItemsCount: Observable<number>;
+    cartItems: Observable<CartItem[]>;
 
     constructor(private cartService: CartService,
                 private router: Router,
-                private store: Store<ICartState>,
                 private toastrService: ToastrService,
                 private location: Location) {
     }
 
     ngOnInit() {
-        this.store.select(getAllCartInfo).subscribe((cartInfo: ICartState) => {
-            this.cart = cartInfo.cartItems;
-            this.cartStatus = {
-                total: cartInfo.cartTotal,
-                count: cartInfo.cartItemsCount
-            };
-        });
+        this.cartTotal = this.cartService.getCartTotal();
+        this.cartItemsCount = this.cartService.getCartItemsCount();
+        this.cartItems = this.cartService.getAllCartItems();
+
     }
 
     incrementQty(cartItem) {

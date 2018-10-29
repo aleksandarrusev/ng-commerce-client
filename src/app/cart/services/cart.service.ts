@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {CartItem, ICartItem} from '../models/cart-item.model';
-import {BehaviorSubject} from 'rxjs';
+import {BehaviorSubject, Observable} from 'rxjs';
 import {IProduct, Product} from '../../products/models/product.model';
 import {ICategory} from '../../products/models/category.model';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
@@ -8,7 +8,7 @@ import {Router} from '@angular/router';
 import {environment} from '../../../environments/environment';
 import {ToastrService} from 'ngx-toastr';
 import {httpOptions} from '../../shared/httpOptions';
-import {first, switchMap, tap} from 'rxjs/operators';
+import {first, map, switchMap, tap} from 'rxjs/operators';
 import {Store} from '@ngrx/store';
 import {ICartState} from '../store/cart.reducer';
 import {
@@ -16,7 +16,7 @@ import {
     DecrementCartItemQtyAction,
     IncrementCartItemQtyAction, RemoveFromCartAction,
 } from '../store/cart.actions';
-import {getAllCartInfo, getCartItems} from '../store/cart.selectors';
+import {getAllCartInfo, getAllCartItems, getCartItemsCount, getCartTotal} from '../store/cart.selectors';
 
 @Injectable()
 export class CartService {
@@ -31,7 +31,7 @@ export class CartService {
     }
 
     addToCartOrIncrementQty(product: IProduct): void {
-        this.store.select(getCartItems).pipe(
+        this.store.select(getAllCartItems).pipe(
             first(),
         ).subscribe((cartItems) => {
             const existingCartItem: ICartItem = cartItems.find((item: ICartItem) => item.product._id === product._id);
@@ -50,7 +50,7 @@ export class CartService {
 
 
     incrementItemQty(cartItem: CartItem) {
-        this.store.select(getCartItems).pipe(
+        this.store.select(getAllCartItems).pipe(
             first(),
         ).subscribe((cartItems) => {
             const itemToBeIncremented: ICartItem = cartItems.find((item: ICartItem) => item.product._id === cartItem.product._id);
@@ -61,7 +61,7 @@ export class CartService {
     }
 
     decrementItemQty(cartItem: CartItem) {
-        this.store.select(getCartItems).pipe(
+        this.store.select(getAllCartItems).pipe(
             first(),
         ).subscribe((cartItems) => {
             const itemToBeDecremented: ICartItem = cartItems.find((item: ICartItem) => item.product._id === cartItem.product._id);
@@ -76,7 +76,7 @@ export class CartService {
     }
 
     validateCart() {
-        return this.store.select(getCartItems).pipe(
+        return this.store.select(getAllCartItems).pipe(
             first(),
             switchMap((cartItems) => {
                 const parsedCartItems = cartItems.map((item) => {
@@ -91,15 +91,28 @@ export class CartService {
             })
         );
     }
+    public getAllCartItems(): Observable<any> {
+        return this.store.select(getAllCartItems);
+    }
 
-    public getAllCartItemsRaw() {
-        return [].map((item: CartItem) => {
-            return {
-                id: item.product._id,
-                name: item.product.name,
-                qty: item.qty
-            };
-        });
+    public getCartTotal(): Observable<any> {
+        return this.store.select(getCartTotal);
+    }
+    public getCartItemsCount(): Observable<any> {
+        return this.store.select(getCartItemsCount);
+    }
+
+
+    public getAllCartItemsRaw(): Observable<object> {
+        return this.store.select(getAllCartItems).pipe(
+          map((cartItems: ICartItem[]) => {
+                return cartItems.map(cartItem => ({
+                    id: cartItem.product._id,
+                    name: cartItem.product.name,
+                    qty: cartItem.qty
+                }));
+          })
+        );
     }
 
     public emptyCart() {

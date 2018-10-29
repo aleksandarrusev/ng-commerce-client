@@ -1,5 +1,5 @@
 <h1>Cart</h1>
-<ng-container *ngIf="cartStatus.count >= 1">
+<ng-container *ngIf="(cartItemsCount | async) >= 1">
   <table class="table">
     <thead>
     <tr>
@@ -13,7 +13,7 @@
     </tr>
     </thead>
     <tbody>
-    <tr *ngFor="let cartItem of cart">
+    <tr *ngFor="let cartItem of (cartItems | async)">
       <td>
         <div class="table-image-container"><img [src]="cartItem.product.imageURL" alt=""></div>
       </td>
@@ -41,14 +41,14 @@
     </div>
 
     <div class="col-12 col-sm-3">
-      <h4 class="text-center text-sm-right">Total: {{ cartStatus.total | currency:'USD'}}</h4>
+      <h4 class="text-center text-sm-right">Total: {{ (cartTotal | async) | currency:'USD'}}</h4>
     </div>
     <div class="col-12 col-sm-3 text-center text-sm-right">
       <button class="btn btn-primary" (click)="validateCart()">Proceed to checkout</button>
     </div>
   </div>
 </ng-container>
-<ng-container *ngIf="!cartStatus.count">
+<ng-container *ngIf="!(cartItemsCount | async)">
 <div class="alert alert-info" > Your cart is currently empty. </div>
 <button class="btn btn-primary" (click)="goBack()">
   Go back
