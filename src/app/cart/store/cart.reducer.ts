@@ -78,6 +78,10 @@ export function cartReducer(state = initialCartState,
                     ...state.cartItems.slice(cartItemToRemoveIndex + 1)
                 ]
             }
+        case CartActionTypes.EmptyCart:
+            return {
+                ...initialCartState
+            }
 
 
         default:

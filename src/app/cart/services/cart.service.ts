@@ -13,7 +13,7 @@ import {Store} from '@ngrx/store';
 import {ICartState} from '../store/cart.reducer';
 import {
     AddToCartAction,
-    DecrementCartItemQtyAction,
+    DecrementCartItemQtyAction, EmptyCartAction,
     IncrementCartItemQtyAction, RemoveFromCartAction,
 } from '../store/cart.actions';
 import {getAllCartInfo, getAllCartItems, getCartItemsCount, getCartTotal} from '../store/cart.selectors';
@@ -103,7 +103,7 @@ export class CartService {
     }
 
 
-    public getAllCartItemsRaw(): Observable<object> {
+    public getAllCartItemsSimple(): Observable<object> {
         return this.store.select(getAllCartItems).pipe(
           map((cartItems: ICartItem[]) => {
                 return cartItems.map(cartItem => ({
@@ -116,8 +116,7 @@ export class CartService {
     }
 
     public emptyCart() {
-        // this.cart = [];
-        // this.cartStateSubject.next(this.getCartItemsCount());
+        this.store.dispatch(new EmptyCartAction());
     }
 
 }
