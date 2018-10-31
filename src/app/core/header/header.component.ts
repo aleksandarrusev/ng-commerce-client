@@ -1,5 +1,5 @@
-import {Component, HostListener, OnDestroy, OnInit} from '@angular/core';
-import {Observable, Subject, Subscription} from 'rxjs';
+import {Component, HostListener, OnInit} from '@angular/core';
+import {Observable} from 'rxjs';
 import {AuthService} from '../../auth/services/auth.service';
 import {CartService} from '../../cart/services/cart.service';
 import {ProductsService} from '../../products/services/products.service';
@@ -9,11 +9,6 @@ import {Product} from '../../products/models/product.model';
 import {FormControl} from '@angular/forms';
 import {switchMap, throttleTime} from 'rxjs/operators';
 import {debounceTime} from 'rxjs/internal/operators';
-import {select, Store} from '@ngrx/store';
-import {IAuthState} from '../../auth/store/auth.reducer';
-import {LogoutAction} from '../../auth/store/auth.actions';
-import {getUser} from '../../auth/store/auth.selectors';
-import {getAllCartItems, getCartItemsCount} from '../../cart/store/cart.selectors';
 
 @Component({
     selector: 'app-header',
@@ -24,9 +19,9 @@ export class HeaderComponent implements OnInit {
 
     categories$: Observable<ICategory[]>;
     autocompleteResults: Product[];
-    cartItemsCount: Observable<number>;
+    cartItemsCount$: Observable<number>;
     queryField: FormControl = new FormControl();
-    user: IUser = null;
+    user$: Observable<IUser>;
     showMenu = false;
     showAutocomplete = false;
 
@@ -42,40 +37,25 @@ export class HeaderComponent implements OnInit {
 
 
     constructor(private authService: AuthService,
-                private store: Store<IAuthState>,
+                private cartService: CartService,
                 private productService: ProductsService) {
     }
 
     logout() {
-        this.store.dispatch(new LogoutAction());
+        this.authService.logout();
     }
 
     ngOnInit() {
-        this.authService.authState$.subscribe((user) => {
-            if (user) {
-                this.user = user;
-                return;
-            }
-            this.user = null;
-        });
-
-        this.store.pipe(
-            select(getUser)
-        ).subscribe((user) => {
-            if (user) {
-                this.user = user;
-            } else {
-                this.user = null;
-            }
-        });
-
+        this.user$ = this.authService.getUser();
 
         this.categories$ = this.productService.fetchAllCategories();
 
-        this.queryField.valueChanges.pipe(switchMap((value) => {
-                return this.productService.fetchProductsForAutocomplete(value);
-            }
-        ), debounceTime(600)).subscribe((result) => {
+        this.queryField.valueChanges.pipe(
+            switchMap((value) => {
+                    return this.productService.fetchProductsForAutocomplete(value);
+                }
+            ),
+            debounceTime(600)).subscribe((result) => {
             if (result && result.length >= 1) {
                 this.showAutocomplete = true;
                 this.autocompleteResults = result;
@@ -84,7 +64,7 @@ export class HeaderComponent implements OnInit {
             }
         });
 
-        this.cartItemsCount = this.store.select(getCartItemsCount);
+        this.cartItemsCount$ = this.cartService.getCartItemsCount();
 
     }
 

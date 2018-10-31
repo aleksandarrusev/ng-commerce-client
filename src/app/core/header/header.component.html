@@ -30,10 +30,10 @@
       <ul class="navbar-nav ml-auto">
         <li class="nav-item">
           <a class="nav-link" routerLink="/cart"><i class="fas fa-shopping-cart"></i><span
-            class="badge badge-primary ml-2" *ngIf="cartItemsCount | async as cartCount">{{ cartCount}} </span></a>
+            class="badge badge-primary ml-2" *ngIf="cartItemsCount$ | async as cartCount">{{ cartCount}} </span></a>
         </li>
 
-        <ng-container *ngIf="!user">
+        <ng-container *ngIf="!(user$ | async)">
           <li class="nav-item">
             <a class="nav-link" routerLinkActive="active" routerLink="/login">Login</a>
           </li>
@@ -41,7 +41,7 @@
             <a class="nav-link" routerLink="/register">Register</a>
           </li>
         </ng-container>
-        <ng-container *ngIf="user">
+        <ng-container *ngIf="user$ | async as user">
           <li class="nav-item" *ngIf="user.isAdmin">
             <a class="nav-link" routerLink="/product/add">Add product</a>
           </li>

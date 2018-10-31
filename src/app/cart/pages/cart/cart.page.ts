@@ -7,7 +7,10 @@ import {ToastrService} from 'ngx-toastr';
 import {ICartState} from '../../store/cart.reducer';
 import {getAllCartInfo, getAllCartItems} from '../../store/cart.selectors';
 import {DecrementCartItemQtyAction, IncrementCartItemQtyAction} from '../../store/cart.actions';
-import {Observable} from 'rxjs';
+import {combineLatest, Observable} from 'rxjs';
+import {map, tap} from 'rxjs/operators';
+import {IUser} from '../../../auth/models/user.model';
+import {AuthService} from '../../../auth/services/auth.service';
 
 @Component({
     selector: 'app-cart',
@@ -22,6 +25,7 @@ export class CartPage implements OnInit {
 
     constructor(private cartService: CartService,
                 private router: Router,
+                private authService: AuthService,
                 private toastrService: ToastrService,
                 private location: Location) {
     }

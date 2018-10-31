@@ -6,57 +6,56 @@ import {FormBuilder, FormGroup, Validators, ValidationErrors} from '@angular/for
 import {ToastrService} from 'ngx-toastr';
 import {Store} from '@ngrx/store';
 import {IAuthState} from '../../store/auth.reducer';
-import {LoginAction} from '../../store/auth.actions';
+import {LoginAction, LoginSuccessAction} from '../../store/auth.actions';
 
 @Component({
-  selector: 'app-login',
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css']
+    selector: 'app-login',
+    templateUrl: './login.component.html',
+    styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
 
-  returnUrl: UrlTree;
-  registerForm: FormGroup;
+    returnUrl: UrlTree;
+    registerForm: FormGroup;
 
-  constructor(private authService: AuthService,
-              private activatedRoute: ActivatedRoute,
-              private fb: FormBuilder,
-              private toastrService: ToastrService,
-              private store: Store<IAuthState>,
-              private router: Router) {
-  }
-
-  ngOnInit() {
-    this.returnUrl = this.activatedRoute.snapshot.queryParams['returnUrl'] || '/';
-    this.initForm();
-
-  }
-
-  initForm() {
-    this.registerForm = this.fb.group({
-      email: ['', [Validators.required, Validators.email, Validators.minLength(6)]],
-      password: ['', [Validators.required, Validators.minLength(6)]],
-    });
-  }
-
-  login(form: FormGroup) {
-    const {email, password} = form.value;
-    const loginRequest = {
-      userCredentials: {email, password},
-        returnUrl: this.returnUrl,
+    constructor(private authService: AuthService,
+                private activatedRoute: ActivatedRoute,
+                private fb: FormBuilder,
+                private toastrService: ToastrService,
+                private store: Store<IAuthState>,
+                private router: Router) {
     }
-    this.store.dispatch(new LoginAction(loginRequest));
 
-    // this.authService.login(email, password).subscribe(
-    //   () => {
-    //     this.toastrService.success('LoginAction succesfull.')
-    //     this.router.navigateByUrl(this.returnUrl);
-    //   },
-    //   (error) => {
-    //     this.toastrService.error(error.error);
-    //     this.registerForm.controls['email'].setErrors({'incorrect': true});
-    //     this.registerForm.controls['password'].setErrors({'incorrect': true});
-    //   }
-    // );
-  }
+    ngOnInit() {
+        this.returnUrl = this.activatedRoute.snapshot.queryParams['returnUrl'] || '/';
+        this.initForm();
+
+    }
+
+    initForm() {
+        this.registerForm = this.fb.group({
+            email: ['', [Validators.required, Validators.email, Validators.minLength(6)]],
+            password: ['', [Validators.required, Validators.minLength(6)]],
+        });
+    }
+
+    login(form: FormGroup) {
+        const {email, password} = form.value;
+        const loginRequest = {
+            userCredentials: {email, password},
+            returnUrl: this.returnUrl,
+        };
+        this.authService.login(loginRequest).subscribe(
+            ({user}) => {
+                this.toastrService.success('Login succesfull.');
+                this.router.navigateByUrl(loginRequest.returnUrl);
+
+                this.authService.loginSuccess(user);
+            },
+            () => {
+                this.authService.loginError();
+            }
+
+        );
+    }
 }

@@ -37,4 +37,4 @@ export class LogoutAction implements Action {
     readonly type = AuthActionTypes.Logout;
 }
 
-export type AuthActions = LoginAction | LoginSuccessAction | LoginFailedAction |  LogoutAction | SetUserAction ;
+export type AuthActions = LoginAction | LoginSuccessAction | LoginFailedAction |  LogoutAction | SetUserAction;

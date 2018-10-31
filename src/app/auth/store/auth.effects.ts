@@ -5,6 +5,13 @@ import {AuthActionTypes, LoginAction, LoginFailedAction, LoginSuccessAction, Log
 import {catchError, map, mergeMap, tap} from 'rxjs/operators';
 import {IUser} from '../models/user.model';
 import {defer, Observable, of} from 'rxjs';
+import {environment} from '../../../environments/environment';
+import {Store} from '@ngrx/store';
+import {Router} from '@angular/router';
+import {ToastrService} from 'ngx-toastr';
+import {JwtHelperService} from '@auth0/angular-jwt';
+import {HttpClient} from '@angular/common/http';
+import {IAuthState} from './auth.reducer';
 
 
 @Injectable()
@@ -17,28 +24,29 @@ export class AuthEffects {
         this._init$ = value;
     }
 
+
     @Effect()
-    login$ = this.actions$.pipe(
-        ofType<LoginAction>(AuthActionTypes.Login),
-        mergeMap((action) => {
-            return this.authService.login(action.payload).pipe(
-                catchError((error) => {
-                   return of(new LoginFailedAction());
-                }),
-            );
-        }),
-        map((response: { token: String, user: IUser}) => {
-            return new LoginSuccessAction(response.user);
-        })
-    );
+    // login$ = this.actions$.pipe(
+    //     ofType<LoginAction>(AuthActionTypes.Login),
+    //     mergeMap(({payload}) => {
     //
-    @Effect({dispatch: false})
-    logout$ = this.actions$.pipe(
-        ofType<LogoutAction>(AuthActionTypes.Logout),
-        tap(() => {
-            return this.authService.logout();
-        })
-    );
+    //         const userCredentials = {
+    //             email: payload.userCredentials.email,
+    //             password: payload.userCredentials.password,
+    //         }
+    //
+    //
+    //         // return this.authService.login(action.payload).pipe(
+    //         //     catchError((error) => {
+    //         //         return of(new LoginFailedAction());
+    //         //     }),
+    //         // );
+    //     }),
+    //     map((response: { token: String, user: IUser }) => {
+    //         return new LoginSuccessAction(response.user);
+    //     })
+    // );
+    //
     @Effect() private _init$ = defer(() => {
         const user = this.authService.getTokenData();
 
@@ -50,7 +58,11 @@ export class AuthEffects {
 
     });
 
-    constructor(private actions$: Actions, private authService: AuthService) {
+    constructor(private actions$: Actions,
+                private authService: AuthService,
+                private router: Router,
+                private http: HttpClient,
+                private toastrService: ToastrService) {
 
     }
 

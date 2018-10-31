@@ -1,14 +1,18 @@
 import {Injectable} from '@angular/core';
-import {BehaviorSubject, Observable} from 'rxjs';
+import {BehaviorSubject, Observable, of} from 'rxjs';
 import {Router} from '@angular/router';
 import {HttpClient} from '@angular/common/http';
 import {JwtHelperService} from '@auth0/angular-jwt';
 import {IUser} from '../models/user.model';
 import {environment} from '../../../environments/environment';
 import {httpOptions} from '../../shared/httpOptions';
-import {tap} from 'rxjs/operators';
+import {catchError, map, tap} from 'rxjs/operators';
 import {ToastrService} from 'ngx-toastr';
 import {ILoginRequest} from '../models/login-request.model';
+import {Store} from '@ngrx/store';
+import {IAuthState} from '../store/auth.reducer';
+import {LoginFailedAction, LoginSuccessAction, LogoutAction} from '../store/auth.actions';
+import {getUser} from '../store/auth.selectors';
 
 @Injectable({
     providedIn: 'root'
@@ -18,6 +22,7 @@ export class AuthService {
     public authStateSubject: BehaviorSubject<IUser | null> = new BehaviorSubject<IUser | null>(this.getTokenData());
 
     constructor(private router: Router,
+                private store: Store<IAuthState>,
                 private http: HttpClient,
                 private toastrService: ToastrService,
                 private jwtService: JwtHelperService) {
@@ -41,7 +46,7 @@ export class AuthService {
         );
     }
 
-    login(loginRequest: ILoginRequest): Observable<any> {
+    public login(loginRequest: ILoginRequest): Observable<any> {
         const userCredentials = {
             email: loginRequest.userCredentials.email,
             password: loginRequest.userCredentials.password,
@@ -50,21 +55,39 @@ export class AuthService {
         return this.http.post(`${environment.api}/auth`, userCredentials)
             .pipe(
                 tap((response: { token: String, user: IUser }) => {
-                    const {user, token} = response;
+                    const {token} = response;
                     this.setToken(token);
-
-                    this.toastrService.success('LoginAction succesfull.');
-                    this.router.navigateByUrl(loginRequest.returnUrl);
-
-                })
+                }),
             );
     }
 
-    logout() {
-        localStorage.removeItem('token');
-        this.router.navigate(['/login']);
-        this.authStateSubject.next(null);
+    public loginSuccess(response) {
+        this.store.dispatch(new LoginSuccessAction(response));
     }
+
+    public loginError() {
+        this.store.dispatch(new LoginFailedAction());
+    }
+
+    public logout() {
+        this.store.dispatch(new LogoutAction());
+    }
+
+    public getUser(): Observable<IUser> {
+        return this.store.select(getUser);
+    }
+
+    public getUserSimple(): Observable<object> {
+        return this.store.select(getUser).pipe(
+            map((user: IUser) => {
+                return {
+                    id: user._id,
+                    name: user.name,
+                };
+            })
+        );
+    }
+
 
     public setToken(token) {
         localStorage.setItem('token', token);
@@ -82,14 +105,6 @@ export class AuthService {
         if (this.jwtService.isTokenExpired(token)) {
             return this.jwtService.decodeToken(token);
         }
-    }
-
-    public getUser(): IUser {
-        let user;
-        this.authStateSubject.subscribe((userData) => {
-            user = userData;
-        });
-        return user;
     }
 
     public isLoggedIn(): boolean {
